@@ -1,0 +1,15 @@
+{
+    "name": "workstation/simple-php-mvc-blog",
+    "authors": [
+        {
+            "name": "WorkStation",
+            "email": "rafayet@familytaxrecovery.ca"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "app\\": "./"
+        }
+    },
+    "require": {}
+}

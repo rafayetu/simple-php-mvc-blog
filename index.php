@@ -1,10 +1,14 @@
 <?php
 
-$app = new Application();
+//use app\core;
+require_once __DIR__.'/vendor/autoload.php';
+use app\core;
 
-$router = new Router();
 
-$router->get("/", function(){
+
+$app = new core\Application();
+
+$app->router->get("/", function(){
     return "Hello World";
 });
 
