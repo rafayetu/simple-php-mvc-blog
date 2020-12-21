@@ -4,12 +4,12 @@
 namespace app\models\fields;
 
 
-use app\core\Field;
+use app\core\ModelField;
 
-class PasswordField extends Field
+class PasswordModelField extends ModelField
 {
     /**
-     * TextField constructor.
+     * TextModelField constructor.
      * @param string $name
      * @param string|null $verbose
      */

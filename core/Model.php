@@ -43,4 +43,14 @@ abstract class Model
     protected function formValidation(){
         return true;
     }
+
+    public function hasError($attribute)
+    {
+        return $this->errors[$attribute] ?? false;
+    }
+
+    public function getFirstError($attribute)
+    {
+        return isset($this->errors[$attribute]["messages"][0]) ? $this->errors[$attribute]["messages"][0] : "";
+    }
 }

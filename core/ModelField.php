@@ -4,7 +4,7 @@
 namespace app\core;
 
 
-abstract class Field
+abstract class ModelField
 {
     public string $name;
     private ?string $value = null;
@@ -17,7 +17,7 @@ abstract class Field
     public array $errors = [];
 
     /**
-     * Field constructor.
+     * ModelField constructor.
      * @param string $name
      * @param string $type
      * @param string|null $verbose
@@ -48,10 +48,8 @@ abstract class Field
 
     private function validateRequired($value)
     {
-        $message = "$this->verbose field is required";
-        if (!is_null($this->default))
-            $is_value = true;
-        elseif ($this->type == 'string' && !$value)
+        $message = "This field is required";
+        if ($this->type == 'string' && !$value)
             $is_value = false;
         elseif (in_array($this->type, ['integer', 'float']) && $value === '')
             $is_value = false;
@@ -133,15 +131,15 @@ abstract class Field
         if (!is_null($this->min) &&  !is_null($this->max)){
             $validation = strlen($value) >= $this->min && strlen($value) <= $this->max;
             if (!$validation)
-                $message = "Field value can be {$this->min} to {$this->max} characters";
+                $message = "ModelField value can be {$this->min} to {$this->max} characters";
         } elseif (!is_null($this->min)) {
             $validation = strlen($value) >= $this->min;
             if (!$validation)
-                $message = "Field value should be at least {$this->min} characters";
+                $message = "ModelField value should be at least {$this->min} characters";
         } elseif (!is_null($this->max)) {
             $validation = strlen($value) <= $this->max;
             if (!$validation)
-                $message = "Field value should be maximum {$this->max} characters";
+                $message = "ModelField value should be maximum {$this->max} characters";
         }
         if (!$validation) {
             array_push($this->errors, $message);
@@ -156,15 +154,15 @@ abstract class Field
         if (!is_null($this->min) &&  !is_null($this->max)){
             $validation = $value >= $this->min && $value <= $this->max;
             if (!$validation)
-                $message = "Field value can be {$this->min} to {$this->max}";
+                $message = "ModelField value can be {$this->min} to {$this->max}";
         } elseif (!is_null($this->min)) {
             $validation = $value >= $this->min;
             if (!$validation)
-                $message = "Field value should be at least {$this->min}";
+                $message = "ModelField value should be at least {$this->min}";
         } elseif (!is_null($this->max)) {
             $validation = $value <= $this->max;
             if (!$validation)
-                $message = "Field value should be maximum {$this->max}";
+                $message = "ModelField value should be maximum {$this->max}";
         }
         if (!$validation) {
             array_push($this->errors, $message);

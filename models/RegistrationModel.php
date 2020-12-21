@@ -5,25 +5,25 @@ namespace app\models;
 
 
 use app\core\Model;
-use app\models\fields\EmailField;
-use app\models\fields\PasswordField;
-use app\models\fields\TextField;
+use app\models\fields\EmailModelField;
+use app\models\fields\PasswordModelField;
+use app\models\fields\TextModelField;
 
 class RegistrationModel extends Model
 {
-    public TextField $firstname;
-    public TextField $lastname;
-    public EmailField $email;
-    public PasswordField $password;
-    public PasswordField $confirmPassword;
+    public TextModelField $firstname;
+    public TextModelField $lastname;
+    public EmailModelField $email;
+    public PasswordModelField $password;
+    public PasswordModelField $confirmPassword;
 
     public function __construct()
     {
-        $this->firstname = new TextField($name = "firstname", $verbose = "First Name");
-        $this->lastname = new TextField($name = "lastname", $verbose = "Last Name");
-        $this->email = new EmailField($name = "email", $verbose = "Email");
-        $this->password = new PasswordField($name = "password", $verbose = "Password");
-        $this->confirmPassword = new PasswordField($name = "confirmPassword", $verbose = "Confirm Password");
+        $this->firstname = new TextModelField($name = "firstname", $verbose = "First Name");
+        $this->lastname = new TextModelField($name = "lastname", $verbose = "Last Name");
+        $this->email = new EmailModelField($name = "email", $verbose = "Email");
+        $this->password = new PasswordModelField($name = "password", $verbose = "Password");
+        $this->confirmPassword = new PasswordModelField($name = "confirmPassword", $verbose = "Confirm Password");
 
         $this->firstname->setRequired(true)->setMin(2)->setMax(50);;
         $this->lastname->setRequired(true)->setMin(2)->setMax(50);

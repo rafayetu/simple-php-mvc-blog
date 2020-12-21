@@ -4,13 +4,13 @@
 namespace app\models\fields;
 
 
-use app\core\Field;
+use app\core\ModelField;
 
-class BooleanField extends Field
+class BooleanModelField extends ModelField
 {
 
     /**
-     * TextField constructor.
+     * TextModelField constructor.
      * @param string $name
      * @param string|null $verbose
      */

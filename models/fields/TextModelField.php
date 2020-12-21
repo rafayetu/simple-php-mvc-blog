@@ -4,27 +4,23 @@
 namespace app\models\fields;
 
 
-use app\core\Field;
+use app\core\ModelField;
 
-class EmailField extends Field
+class TextModelField extends ModelField
 {
 
     /**
-     * TextField constructor.
+     * TextModelField constructor.
      * @param string $name
      * @param string|null $verbose
      */
     public function __construct(string $name, string $verbose = null)
     {
         parent::__construct($name, 'string', $verbose)
-            ->setMin(5)
-            ->setMax(255);
+            ->setMin(1)
+            ->setMax(100);
         return $this;
-
     }
 
-    public function fieldValidate($value)
-    {
-        return filter_var($value, FILTER_VALIDATE_EMAIL) ? true : false;
-    }
+
 }

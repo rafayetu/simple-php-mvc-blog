@@ -4,20 +4,22 @@
 namespace app\models\fields;
 
 
-use app\core\Field;
+use app\core\ModelField;
 
-class IntegerField extends Field
+class FloatModelField extends ModelField
 {
 
     /**
-     * TextField constructor.
+     * TextModelField constructor.
      * @param string $name
      * @param string|null $verbose
      */
     public function __construct(string $name, string $verbose = null)
     {
-        parent::__construct($name, 'integer', $verbose);
-        $this->setValue(0);
+        settype($this->min, "float");
+        settype($this->max, "float");
+        parent::__construct($name, 'float', $verbose);
+        $this->setValue(0.00);
         return $this;
 
     }
@@ -25,14 +27,15 @@ class IntegerField extends Field
     public function convert($value)
     {
         $value = trim($value);
-        if(ctype_digit($value)){
-            return intval($value);
+        if (is_numeric($value)) {
+            return floatval($value);
         } elseif (!is_null($this->default) && !$value) {
             return $this->default;
         } else {
-            array_push($this->errors, "Input value is not valid integer");
+            array_push($this->errors, "Input value is not valid float");
             return null;
         }
     }
+
 
 }
