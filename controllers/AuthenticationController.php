@@ -6,6 +6,7 @@ namespace app\controllers;
 
 use app\core\Controller;
 use app\core\Request;
+use app\models\RegistrationModel;
 
 class AuthenticationController extends Controller
 {
@@ -27,8 +28,16 @@ class AuthenticationController extends Controller
 
     public function register(Request $request){
         if ($request->isPost()){
+            $registerModel = new RegistrationModel();
+            $registerModel->loadData($request->getBody());
+            if ($registerModel->is_valid && $registerModel->register()){
+                return "Success";
+            }
+            $data = $request->getBody();
+
             return "handle registration data";
+        } else {
+            return  $this->render("RegistrationView", []);
         }
-        return  $this->render("RegistrationView", []);
     }
 }
