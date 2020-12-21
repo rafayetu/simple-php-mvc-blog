@@ -38,7 +38,7 @@ abstract class Field
         $validation = ($this->required) ? $this->validateRequired($value) : true;
         $value = $this->convert($value);
         $validation &= (!in_array($this->type, ['integer', 'float'])) ? $this->validateMinMax($value) : $this->validateNumberMinMax($value);
-        $validation &= $this->fieldValidate();
+        $validation &= $this->fieldValidate($value);
         if ($validation)
             $this->setValue($value);
         return $validation;
@@ -64,7 +64,7 @@ abstract class Field
         return $is_value;
     }
 
-    public function fieldValidate()
+    public function fieldValidate($value)
     {
         return true;
     }

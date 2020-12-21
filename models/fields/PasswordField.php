@@ -33,6 +33,9 @@ class PasswordField extends Field
         return $validation;
 
     }
-
+    public function fieldValidate($value)
+    {
+        return true;
+    }
 
 }

@@ -22,7 +22,7 @@ abstract class Model
         $this->formValidation();
     }
 
-    protected function validate($key, $value)
+    private function validate($key, $value)
     {
         $field = $this->{$key};
         $validation = $field->validate($value);
@@ -38,7 +38,6 @@ abstract class Model
             "name" => $field->verbose,
             "messages" => $field->errors
         );
-
     }
 
     protected function formValidation(){

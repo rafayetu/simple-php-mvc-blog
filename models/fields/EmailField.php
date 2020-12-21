@@ -23,5 +23,8 @@ class EmailField extends Field
 
     }
 
-
+    public function fieldValidate($value)
+    {
+        return filter_var($value, FILTER_VALIDATE_EMAIL) ? true : false;
+    }
 }

@@ -27,17 +27,19 @@ class AuthenticationController extends Controller
     }
 
     public function register(Request $request){
-        if ($request->isPost()){
-            $registerModel = new RegistrationModel();
+        $registerModel = new RegistrationModel();
+
+        if ($request->isPost()) {
             $registerModel->loadData($request->getBody());
-            if ($registerModel->is_valid && $registerModel->register()){
+            if ($registerModel->is_valid && $registerModel->register()) {
                 return "Success";
             }
             $data = $request->getBody();
-
-            return "handle registration data";
-        } else {
-            return  $this->render("RegistrationView", []);
         }
+
+        return  $this->render("RegistrationView", [
+            "model" => $registerModel,
+            "errors" => $registerModel->errors
+        ]);
     }
 }
