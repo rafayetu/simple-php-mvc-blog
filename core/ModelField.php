@@ -8,12 +8,14 @@ abstract class ModelField
 {
     public string $name;
     private ?string $value = null;
+    private ?string $dbValue = null;
     protected ?string $default = null;
     private string $type;
     public string $verbose;
     protected ?int $min = null;
     protected ?int $max = null;
     protected bool $required = false;
+    protected $uniqueMethod;
     public array $errors = [];
 
     /**
@@ -30,6 +32,7 @@ abstract class ModelField
         settype($this->value, $this->type);
         settype($this->default, $this->type);
         $this->verbose = !is_null($verbose) ? $verbose : $this->name;
+
         return $this;
     }
 
@@ -41,10 +44,16 @@ abstract class ModelField
         $validation &= $this->fieldValidate($value);
         if ($validation)
             $this->setValue($value);
+        if ($validation)
+            $validation &= $this->validateUnique();
         return $validation;
 
     }
 
+    public function getVerboseLower()
+    {
+        return strtolower($this->verbose) ?? "";
+    }
 
     private function validateRequired($value)
     {
@@ -57,7 +66,7 @@ abstract class ModelField
             $is_value = true;
 
         if (!$is_value) {
-            array_push($this->errors, $message);
+            $this->addErrorMessage($message);
         }
         return $is_value;
     }
@@ -67,10 +76,77 @@ abstract class ModelField
         return true;
     }
 
+    public function validateUnique(): bool
+    {
+        $isUnique = $this->getUniqueMethod() ? call_user_func($this->getUniqueMethod()) : true;
+        if (!$isUnique) {
+            $this->addErrorMessage("This {$this->getVerboseLower()} already exists");
+        }
+        return $isUnique;
+    }
+
+    protected function convert($value)
+    {
+        return trim($value);
+    }
+
+    protected function validateMinMax($value)
+    {
+        $message = "";
+        $validation = true;
+        if (!is_null($this->min) && !is_null($this->max)) {
+            $validation = strlen($value) >= $this->min && strlen($value) <= $this->max;
+            if (!$validation)
+                $message = "$this->verbose value can be {$this->min} to {$this->max} characters";
+        } elseif (!is_null($this->min)) {
+            $validation = strlen($value) >= $this->min;
+            if (!$validation)
+                $message = "$this->verbose value should be at least {$this->min} characters";
+        } elseif (!is_null($this->max)) {
+            $validation = strlen($value) <= $this->max;
+            if (!$validation)
+                $message = "$this->verbose value should be maximum {$this->max} characters";
+        }
+        if (!$validation) {
+            $this->addErrorMessage($message);
+        }
+        return $validation;
+    }
+
+    protected function validateNumberMinMax($value)
+    {
+        $message = "";
+        $validation = true;
+
+        if (!is_null($this->min) && !is_null($this->max)) {
+            $validation = $value >= $this->min && $value <= $this->max;
+            if (!$validation)
+                $message = "ModelField value can be {$this->min} to {$this->max}";
+        } elseif (!is_null($this->min)) {
+            $validation = $value >= $this->min;
+            if (!$validation)
+                $message = "ModelField value should be at least {$this->min}";
+        } elseif (!is_null($this->max)) {
+            $validation = $value <= $this->max;
+            if (!$validation)
+                $message = "ModelField value should be maximum {$this->max}";
+        }
+        if (!$validation) {
+            $this->addErrorMessage($message);
+        }
+        return $validation;
+    }
+
+    protected function addErrorMessage($message)
+    {
+        array_push($this->errors, $message);
+        Application::$app->session->setMessage("danger", $this->verbose, $message);
+    }
+
     /**
      * @return string
      */
-    public function getValue(): string
+    public function getValue(): ?string
     {
         return $this->value;
     }
@@ -81,6 +157,7 @@ abstract class ModelField
     public function setValue(string $value): void
     {
         $this->value = $value;
+        $this->setDbValue($value);
     }
 
     /**
@@ -88,7 +165,7 @@ abstract class ModelField
      */
     public function setDefault(?string $default)
     {
-        $this->value = $default;
+        $this->setValue($default);
         $this->default = $default;
         return $this;
     }
@@ -120,53 +197,39 @@ abstract class ModelField
         return $this;
     }
 
-
-    protected function convert($value){
-        return trim($value);
+    /**
+     * @return string|null
+     */
+    public function getDbValue(): ?string
+    {
+        return $this->dbValue;
     }
 
-    protected function validateMinMax($value){
-        $message = "";
-        $validation = true;
-        if (!is_null($this->min) &&  !is_null($this->max)){
-            $validation = strlen($value) >= $this->min && strlen($value) <= $this->max;
-            if (!$validation)
-                $message = "ModelField value can be {$this->min} to {$this->max} characters";
-        } elseif (!is_null($this->min)) {
-            $validation = strlen($value) >= $this->min;
-            if (!$validation)
-                $message = "ModelField value should be at least {$this->min} characters";
-        } elseif (!is_null($this->max)) {
-            $validation = strlen($value) <= $this->max;
-            if (!$validation)
-                $message = "ModelField value should be maximum {$this->max} characters";
-        }
-        if (!$validation) {
-            array_push($this->errors, $message);
-        }
-        return $validation;
+    /**
+     * @param string|null $dbValue
+     */
+    public function setDbValue(?string $dbValue): void
+    {
+        $this->dbValue = $dbValue;
     }
 
-    protected function validateNumberMinMax($value){
-        $message = "";
-        $validation = true;
+    /**
+     * @return mixed
+     */
+    public function getUniqueMethod()
+    {
+        return $this->uniqueMethod;
+    }
 
-        if (!is_null($this->min) &&  !is_null($this->max)){
-            $validation = $value >= $this->min && $value <= $this->max;
-            if (!$validation)
-                $message = "ModelField value can be {$this->min} to {$this->max}";
-        } elseif (!is_null($this->min)) {
-            $validation = $value >= $this->min;
-            if (!$validation)
-                $message = "ModelField value should be at least {$this->min}";
-        } elseif (!is_null($this->max)) {
-            $validation = $value <= $this->max;
-            if (!$validation)
-                $message = "ModelField value should be maximum {$this->max}";
-        }
-        if (!$validation) {
-            array_push($this->errors, $message);
-        }
-        return $validation;    }
+    /**
+     * @param $callable
+     */
+    public function setUniqueMethod($callable): ModelField
+    {
+        $this->uniqueMethod = $callable;
+        return $this;
+    }
+
+
 
 }

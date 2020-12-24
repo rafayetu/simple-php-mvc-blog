@@ -3,8 +3,6 @@
 
 namespace app\core;
 
-use app\views;
-
 class Controller
 {
     protected string $layout = "main";
@@ -44,7 +42,7 @@ class Controller
         }
         $layout = $this->getLayout();
         ob_start();
-        include_once Application::$ROOT_DIR . "/views/layouts/"."$layout.php";
+        include_once ROOT_DIR . "/views/layouts/"."$layout.php";
         return ob_get_clean();
     }
 
@@ -54,7 +52,7 @@ class Controller
             $$key = $value;
         }
         ob_start();
-        include_once Application::$ROOT_DIR . "/views/$view.php";
+        include_once ROOT_DIR . "/views/$view.php";
         return ob_get_clean();
     }
 

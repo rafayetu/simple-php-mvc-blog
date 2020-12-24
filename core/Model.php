@@ -8,6 +8,17 @@ abstract class Model
 {
     public array $errors = [];
     public bool $is_valid = true;
+    public Database $db;
+
+    /**
+     * Model constructor.
+     * @param Database $db
+     */
+    public function __construct()
+    {
+        $this->db = Application::$app->db;
+    }
+
 
     public function loadData(array $data)
     {
@@ -52,5 +63,14 @@ abstract class Model
     public function getFirstError($attribute)
     {
         return isset($this->errors[$attribute]["messages"][0]) ? $this->errors[$attribute]["messages"][0] : "";
+    }
+
+    public static function loadAttributeValuesToArray(array $attributes)
+    {
+        $keyValues = array();
+        foreach ($attributes as $attribute){
+            $keyValues[$attribute->name] = $attribute->getValue();
+        }
+        return $keyValues;
     }
 }

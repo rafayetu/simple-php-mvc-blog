@@ -4,9 +4,11 @@
 namespace app\controllers;
 
 
+use app\core\Application;
 use app\core\Controller;
 use app\core\Request;
-use app\models\RegistrationModel;
+use app\models\UserModel;
+
 
 class AuthenticationController extends Controller
 {
@@ -27,19 +29,22 @@ class AuthenticationController extends Controller
     }
 
     public function register(Request $request){
-        $registerModel = new RegistrationModel();
+        $userModel = new UserModel();
 
         if ($request->isPost()) {
-            $registerModel->loadData($request->getBody());
-            if ($registerModel->is_valid && $registerModel->register()) {
-                return "Success";
+            $userModel->loadData($request->getBody());
+            if ($userModel->register()) {
+                Application::$app->session->setMessage("success", "Registration successful",
+                    "You have successfully registered to Simple MVC Blog.");
+                Application::$app->response->redirect("/");
+                return null;
             }
             $data = $request->getBody();
         }
 
         return  $this->render("RegistrationView", [
-            "model" => $registerModel,
-            "errors" => $registerModel->errors
+            "model" => $userModel,
+//            "errors" => $userModel->errors
         ]);
     }
 }

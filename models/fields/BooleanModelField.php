@@ -30,11 +30,11 @@ class BooleanModelField extends ModelField
             if ($this->checkBool($value)) {
                 return filter_var($value, FILTER_VALIDATE_BOOLEAN);
             } else {
-                array_push($this->errors, $message);
+                $this->addErrorMessage($message);
                 return null;
             }
         } else {
-            array_push($this->errors, $message);
+            $this->addErrorMessage($message);
             return null;
         }
     }

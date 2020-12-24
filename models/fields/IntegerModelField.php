@@ -30,7 +30,7 @@ class IntegerModelField extends ModelField
         } elseif (!is_null($this->default) && !$value) {
             return $this->default;
         } else {
-            array_push($this->errors, "Input value is not valid integer");
+            $this->addErrorMessage("Input value is not valid integer");
             return null;
         }
     }

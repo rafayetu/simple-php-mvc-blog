@@ -27,7 +27,7 @@ class EmailModelField extends ModelField
     {
         $validation = filter_var($value, FILTER_VALIDATE_EMAIL) ? true : false;
         if (!$validation)
-            array_push($this->errors, "This field should be valid email address");
+            $this->addErrorMessage("This field should be valid email address");
         return $validation;
     }
 }

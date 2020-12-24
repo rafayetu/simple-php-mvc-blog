@@ -32,7 +32,7 @@ class FloatModelField extends ModelField
         } elseif (!is_null($this->default) && !$value) {
             return $this->default;
         } else {
-            array_push($this->errors, "Input value is not valid float");
+            $this->addErrorMessage("Input value is not valid float");
             return null;
         }
     }
