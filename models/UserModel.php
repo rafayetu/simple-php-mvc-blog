@@ -4,6 +4,7 @@
 namespace app\models;
 
 
+use app\core\Application;
 use app\core\Model;
 use app\models\fields\EmailModelField;
 use app\models\fields\IntegerModelField;
@@ -45,25 +46,54 @@ class UserModel extends Model
 
     public function formValidation()
     {
-        $validation = $this->confirmPassword->match($this->password);
-        if (!$validation) {
-            $this->is_valid = false;
-            $this->addErrors($this->confirmPassword);
+        if ($this->confirmPassword->getDbValue()){
+            $validation = $this->confirmPassword->match($this->password);
+            if (!$validation) {
+                $this->is_valid = false;
+                $this->addErrors($this->confirmPassword);
+            }
         }
     }
 
-
-    public function register()
+    public function login()
     {
-        if ($this->is_valid){
-            $fields = [$this->firstname, $this->lastname, $this->email, $this->status, $this->password];
-            $this->db->insertIntoTable(self::DB_TABLE, $fields);
+        if ($this->is_valid ){
+            $user = $this->db->selectObject(self::DB_TABLE, $searchQuery=[$this->email, $this->status],
+                $columns=[$this->email, $this->password]);
+            if ($user){
+                if ($this->password->verify($user->password)){
+                    Application::$app->session->setMessage("success", "Login Successful",
+                        "You have successfully logged in to " . SITE_NAME);
+                } else {
+                    $this->password->addErrorMessage("Password didn't match");
+                    return false;
+                }
+            } else {
+                $this->email->addErrorMessage("No user with email <b>$this->email</b> was found");
+                return false;
+            }
             return true;
         } else {
             return false;
         }
 
     }
+
+
+    public function register()
+    {
+        if ($this->is_valid && $this->email->validateUnique()){
+            $fields = [$this->firstname, $this->lastname, $this->email, $this->status, $this->password];
+            $this->db->insertIntoTable(self::DB_TABLE, $fields);
+            Application::$app->session->setMessage("success", "Registration successful",
+                "You have successfully registered to " . SITE_NAME);
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
     public function isUserExist()
     {

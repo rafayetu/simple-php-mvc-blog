@@ -36,6 +36,11 @@ abstract class ModelField
         return $this;
     }
 
+    public function __toString()
+    {
+        return $this->getValue();
+    }
+
     public function validate($value)
     {
         $validation = ($this->required) ? $this->validateRequired($value) : true;
@@ -44,8 +49,8 @@ abstract class ModelField
         $validation &= $this->fieldValidate($value);
         if ($validation)
             $this->setValue($value);
-        if ($validation)
-            $validation &= $this->validateUnique();
+//        if ($validation)
+//            $validation &= $this->validateUnique();
         return $validation;
 
     }
@@ -137,7 +142,7 @@ abstract class ModelField
         return $validation;
     }
 
-    protected function addErrorMessage($message)
+    public function addErrorMessage($message)
     {
         array_push($this->errors, $message);
         Application::$app->session->setMessage("danger", $this->verbose, $message);

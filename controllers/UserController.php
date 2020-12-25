@@ -10,7 +10,7 @@ use app\core\Request;
 use app\models\UserModel;
 
 
-class AuthenticationController extends Controller
+class UserController extends Controller
 {
     /**
      * AuthenticationController constructor.
@@ -22,10 +22,18 @@ class AuthenticationController extends Controller
 
     public function login(Request $request)
     {
+        $userModel = new UserModel();
+
         if ($request->isPost()){
-            return "handle login data";
+
+            $userModel->loadData($request->getBody());
+            if ($userModel->login()) {
+                return Application::$app->response->redirect("/");
+            }
         }
-        return $this->render("LoginView", []);
+        return $this->render("LoginView", [
+            "model" => $userModel
+        ]);
     }
 
     public function register(Request $request){
@@ -34,17 +42,12 @@ class AuthenticationController extends Controller
         if ($request->isPost()) {
             $userModel->loadData($request->getBody());
             if ($userModel->register()) {
-                Application::$app->session->setMessage("success", "Registration successful",
-                    "You have successfully registered to Simple MVC Blog.");
-                Application::$app->response->redirect("/");
-                return null;
+                return Application::$app->response->redirect("/");
             }
-            $data = $request->getBody();
         }
 
         return  $this->render("RegistrationView", [
-            "model" => $userModel,
-//            "errors" => $userModel->errors
+            "model" => $userModel
         ]);
     }
 }

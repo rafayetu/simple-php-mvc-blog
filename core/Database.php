@@ -48,9 +48,10 @@ class Database
     public function selectFromTableSearchArray(string $tableName, array $searchQuery = null, array $columns = null)
     {
         $columnKeys = $columns ? array_map(fn($k) => "$k->name", $columns) : ["*"];
-        $searchQueryKeys = $searchQuery ? array_map(fn($k) => "$k->name=:$k->name", $columns) : ["1"];
+        $searchQueryKeys = $searchQuery ? array_map(fn($k) => "$k->name=:$k->name", $searchQuery) : ["1"];
         $statement = $this->prepare("SELECT ".implode(", ", $columnKeys)." FROM $tableName 
                                     WHERE ". implode(" AND ", $searchQueryKeys), $searchQuery);
+
         $statement->execute();
         return $statement;
     }

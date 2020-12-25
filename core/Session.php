@@ -56,4 +56,15 @@ class Session
         }
         return $random_string;
     }
+
+    public function getSessionKey()
+    {
+        return $_SESSION[self::SESSION_KEY] ?? null;
+    }
+
+    public function setSessionKey()
+    {
+        $_SESSION[self::SESSION_KEY] = self::randomString(100);
+        return $this->getSessionKey();
+    }
 }

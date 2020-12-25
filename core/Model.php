@@ -19,12 +19,13 @@ abstract class Model
         $this->db = Application::$app->db;
     }
 
-
     public function loadData(array $data)
     {
         foreach ($data as $key => $value) {
             if (property_exists($this, $key)) {
-                if (!$this->validate($key, $value)){
+
+                if (!$this->validate($key, $value)) {
+
                     $this->is_valid = false;
 
                 }
@@ -32,6 +33,7 @@ abstract class Model
         }
         $this->formValidation();
     }
+
 
     private function validate($key, $value)
     {
@@ -51,7 +53,8 @@ abstract class Model
         );
     }
 
-    protected function formValidation(){
+    protected function formValidation()
+    {
         return true;
     }
 
@@ -68,7 +71,7 @@ abstract class Model
     public static function loadAttributeValuesToArray(array $attributes)
     {
         $keyValues = array();
-        foreach ($attributes as $attribute){
+        foreach ($attributes as $attribute) {
             $keyValues[$attribute->name] = $attribute->getValue();
         }
         return $keyValues;

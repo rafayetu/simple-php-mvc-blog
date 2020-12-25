@@ -20,33 +20,33 @@ class PasswordModelField extends ModelField
             ->setMin(8)
             ->setMax(50);
         return $this;
-
     }
 
+    public function __toString()
+    {
+        return "$this->verbose value is private";
+    }
     public function match($confirmPassword)
     {
         $validation = false;
-        if ($this->getValue() && $confirmPassword->getValue()){
-            $validation = $this->getValue() == $confirmPassword->getValue();
+        if ($this->getPassword() && $confirmPassword->getDbValue()){
+            $validation = $this->verify($confirmPassword->getDbValue());
+
             if (!$validation)
-                $this->addErrorMessage("Password didn't match");
+                $this->addErrorMessage("$confirmPassword->verbose didn't match");
         }
         return $validation;
-
     }
+
+    public function verify(string $password)
+    {
+        return password_verify($this->getPassword(), $password);
+    }
+
     public function fieldValidate($value)
     {
         return true;
     }
-
-    /**
-     * @return string|null
-     */
-//    public function getValue(): ?string
-//    {
-//        $this->savedPassword = parent::getValue();
-//        return null;
-//    }
 
     /**
      * @param string|null $dbValue
@@ -56,6 +56,15 @@ class PasswordModelField extends ModelField
         parent::setDbValue(password_hash($dbValue, PASSWORD_DEFAULT));
     }
 
+    private function getPassword()
+    {
+        return parent::getValue();
+    }
+
+    public function getValue(): ?string
+    {
+        return null;
+    }
 
 
 }
