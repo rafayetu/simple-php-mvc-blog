@@ -3,7 +3,7 @@
 
 namespace app\core;
 
-class Controller
+abstract class Controller
 {
     protected string $layout = "main";
 

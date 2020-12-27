@@ -26,12 +26,17 @@ class Database
     public function prepare($sql, $data)
     {
         $statement = $this->pdo->prepare($sql);
-        foreach ($data as $field){
-            $statement->bindValue(":$field->name", $field->getDbValue());
-        }
+        $statement = $this->bindValue($statement, $data);
         return $statement;
     }
 
+    public function bindValue($statement, $data, $prefix='')
+    {
+        foreach ($data as $field) {
+            $statement->bindValue(":$prefix$field->name", $field->getDbValue());
+        }
+        return $statement;
+    }
 
     public function insertIntoTable(string $tableName, array $data, array $onDuplicateKeyUpdateColumns = [])
     {
@@ -47,10 +52,10 @@ class Database
 
     public function selectFromTableSearchArray(string $tableName, array $searchQuery = null, array $columns = null)
     {
-        $columnKeys = $columns ? array_map(fn($k) => "$k->name", $columns) : ["*"];
-        $searchQueryKeys = $searchQuery ? array_map(fn($k) => "$k->name=:$k->name", $searchQuery) : ["1"];
-        $statement = $this->prepare("SELECT ".implode(", ", $columnKeys)." FROM $tableName 
-                                    WHERE ". implode(" AND ", $searchQueryKeys), $searchQuery);
+        $columnKeys = $columns ? array_map(fn($obj) => "$obj->name", $columns) : ["*"];
+        $searchQueryKeys = $searchQuery ? array_map(fn($obj) => "$obj->name=:$obj->name", $searchQuery) : ["1"];
+        $statement = $this->prepare("SELECT " . implode(", ", $columnKeys) . " FROM $tableName 
+                                    WHERE " . implode(" AND ", $searchQueryKeys), $searchQuery);
 
         $statement->execute();
         return $statement;
@@ -61,10 +66,26 @@ class Database
         $statement = $this->selectFromTableSearchArray($tableName, $searchQuery, $columns);
         return $statement->fetchObject();
     }
+
     public function selectResult(string $tableName, array $searchQuery = null, array $columns = null)
     {
         $statement = $this->selectFromTableSearchArray($tableName, $searchQuery, $columns);
         return $statement->fetchAll();
     }
 
+    public function updateTable(string $tableName, array $searchQuery = null, $data = null)
+    {
+        if ($data) {
+            $setValues = array_map(fn($obj) => "$obj->name=:set_$obj->name", $data);
+            $searchQueryKeys = $searchQuery ? array_map(fn($obj) => "$obj->name=:search_$obj->name", $searchQuery) : ["1"];
+            $sql = "UPDATE $tableName SET " . implode(", ", $setValues) . " WHERE " . implode(" AND ", $searchQueryKeys);
+            $statement = $this->pdo->prepare($sql);
+            $statement = $this->bindValue($statement, $searchQuery, "search_");
+            $statement = $this->bindValue($statement, $data, "set_");
+            $statement->execute();
+
+        }
+
+
+    }
 }

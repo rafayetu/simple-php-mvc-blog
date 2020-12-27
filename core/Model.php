@@ -4,29 +4,32 @@
 namespace app\core;
 
 
+use app\models\fields\IntegerModelField;
+
 abstract class Model
 {
     public array $errors = [];
-    public bool $is_valid = true;
-    public Database $db;
+    public bool $isFormValid = true;
+    protected Database $db;
+    protected Session $session;
+    protected IntegerModelField $id;
 
-    /**
-     * Model constructor.
-     * @param Database $db
-     */
     public function __construct()
     {
         $this->db = Application::$app->db;
+        $this->id = new IntegerModelField($name = 'id', $verbose = "ID");
+        $this->session = Application::$app->session;
     }
 
     public function loadData(array $data)
     {
+        $this->isFormValid = true;
         foreach ($data as $key => $value) {
             if (property_exists($this, $key)) {
 
                 if (!$this->validate($key, $value)) {
 
-                    $this->is_valid = false;
+                    $this->isFormValid = false;
 
                 }
             }
@@ -75,5 +78,14 @@ abstract class Model
             $keyValues[$attribute->name] = $attribute->getValue();
         }
         return $keyValues;
+    }
+
+    protected function setProperties($record)
+    {
+        foreach ($record as $key => $value){
+            if (property_exists($this, $key)){
+                $this->$key->setValue($value);
+            }
+        }
     }
 }

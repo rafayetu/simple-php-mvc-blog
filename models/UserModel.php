@@ -18,6 +18,9 @@ class UserModel extends Model
     const STATUS_DELETED = 2;
     const DB_TABLE = "users";
 
+    private SessionModel $sessionModel;
+    public bool $isUserLoggedIn = false;
+
     public TextModelField $firstname;
     public TextModelField $lastname;
     public EmailModelField $email;
@@ -25,9 +28,12 @@ class UserModel extends Model
     public PasswordModelField $confirmPassword;
     public IntegerModelField $status;
 
+
     public function __construct()
     {
         parent::__construct();
+        $this->sessionModel = new SessionModel();
+
         $this->firstname = new TextModelField($name = "firstname", $verbose = "First Name");
         $this->lastname = new TextModelField($name = "lastname", $verbose = "Last Name");
         $this->email = new EmailModelField($name = "email", $verbose = "Email");
@@ -42,28 +48,30 @@ class UserModel extends Model
         $this->password->setRequired(true);
         $this->confirmPassword->setRequired(true);
         $this->status->setMax(self::STATUS_DELETED)->setDefault(self::STATUS_ACTIVE);
+
     }
 
-    public function formValidation()
+    public function register()
     {
-        if ($this->confirmPassword->getDbValue()){
-            $validation = $this->confirmPassword->match($this->password);
-            if (!$validation) {
-                $this->is_valid = false;
-                $this->addErrors($this->confirmPassword);
-            }
+        if ($this->isFormValid && $this->email->validateUnique()){
+            $fields = [$this->firstname, $this->lastname, $this->email, $this->status, $this->password];
+            $this->db->insertIntoTable(self::DB_TABLE, $fields);
+            $this->session->setMessage("success", "Registration successful",
+                "You have successfully registered to " . SITE_NAME);
+            return true;
+        } else {
+            return false;
         }
     }
 
     public function login()
     {
-        if ($this->is_valid ){
+        if ($this->isFormValid ){
             $user = $this->db->selectObject(self::DB_TABLE, $searchQuery=[$this->email, $this->status],
                 $columns=[$this->email, $this->password]);
             if ($user){
                 if ($this->password->verify($user->password)){
-                    Application::$app->session->setMessage("success", "Login Successful",
-                        "You have successfully logged in to " . SITE_NAME);
+                    $this->setUser();
                 } else {
                     $this->password->addErrorMessage("Password didn't match");
                     return false;
@@ -76,20 +84,54 @@ class UserModel extends Model
         } else {
             return false;
         }
+    }
+
+    public function logout()
+    {
+        $this->sessionModel->logoutSession();
+        Application::$app->user = new UserModel();
+        $this->session->setMessage("success", "Logout Successful",
+            "You have successfully logged out from " . SITE_NAME);
 
     }
 
-
-    public function register()
+    public function formValidation()
     {
-        if ($this->is_valid && $this->email->validateUnique()){
-            $fields = [$this->firstname, $this->lastname, $this->email, $this->status, $this->password];
-            $this->db->insertIntoTable(self::DB_TABLE, $fields);
-            Application::$app->session->setMessage("success", "Registration successful",
-                "You have successfully registered to " . SITE_NAME);
+        if ($this->confirmPassword->getDbValue()){
+            $validation = $this->confirmPassword->match($this->password);
+            if (!$validation) {
+                $this->isFormValid = false;
+                $this->addErrors($this->confirmPassword);
+            }
+        }
+    }
 
-            return true;
+    private function setUser(){
+        $record = $this->db->selectObject(self::DB_TABLE,
+            $searchQuery=[$this->email],
+            $columns=[$this->id, $this->firstname, $this->lastname]
+        );
+        $this->setProperties($record);
+        $this->sessionModel->generateSession($this);
+        $this->isUserLoggedIn = true;
+        $this->session->setMessage("success", "Login Successful",
+            "Welcome <b>{$this->getFullName()}</b>!!! You have successfully logged in to " . SITE_NAME);
+
+    }
+
+    public function verifyUser(){
+        $user_id = $this->sessionModel->getSessionUserID();
+        if ($user_id){
+            $this->loadData(["id" => $user_id]);
+            $record = $this->db->selectObject(self::DB_TABLE,
+                $searchQuery=[$this->id],
+                $columns=[$this->email, $this->firstname, $this->lastname]
+            );
+            $this->setProperties($record);
+            $this->isUserLoggedIn = true;
+            return $this->isUserLoggedIn;
         } else {
+            $this->isUserLoggedIn = false;
             return false;
         }
     }
@@ -103,5 +145,10 @@ class UserModel extends Model
 
     public function isNewUser(){
         return !$this->isUserExist();
+    }
+
+    public function getFullName() :string
+    {
+        return $this->isUserLoggedIn ? "$this->firstname $this->lastname" :  "Anonymous";
     }
 }

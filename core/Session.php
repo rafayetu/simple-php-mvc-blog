@@ -67,4 +67,8 @@ class Session
         $_SESSION[self::SESSION_KEY] = self::randomString(100);
         return $this->getSessionKey();
     }
+    public function destroySessionKey()
+    {
+        unset($_SESSION[self::SESSION_KEY]);
+    }
 }

@@ -22,7 +22,7 @@ class UserController extends Controller
 
     public function login(Request $request)
     {
-        $userModel = new UserModel();
+        $userModel = Application::$app->user;
 
         if ($request->isPost()){
 
@@ -37,7 +37,7 @@ class UserController extends Controller
     }
 
     public function register(Request $request){
-        $userModel = new UserModel();
+        $userModel = Application::$app->user;
 
         if ($request->isPost()) {
             $userModel->loadData($request->getBody());
@@ -49,5 +49,15 @@ class UserController extends Controller
         return  $this->render("RegistrationView", [
             "model" => $userModel
         ]);
+    }
+
+    public function logout(Request $request)
+    {
+        $userModel = Application::$app->user;
+        $userModel->logout();
+//        if ($request->isPost()) {
+//            $userModel->logout();
+//        }
+        return Application::$app->response->redirect("/");
     }
 }

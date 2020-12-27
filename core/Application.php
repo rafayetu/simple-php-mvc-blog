@@ -4,6 +4,8 @@
 namespace app\core;
 
 
+use app\models\UserModel;
+
 class Application
 {
     public static Application $app;
@@ -13,6 +15,7 @@ class Application
     private Controller $controller;
     public Session $session;
     public Database $db;
+    public UserModel $user;
 
 
 
@@ -25,6 +28,8 @@ class Application
         $this->session = new Session();
         $this->router = new Router($this->request, $this->response);
         $this->db = new Database($config["db"]);
+        $this->user = new UserModel();
+        $this->user->verifyUser();
 
     }
 

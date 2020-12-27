@@ -17,9 +17,7 @@ $session = Application::$app->session;
                 <small class="text-white">{$message['time']}</small>
                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
-            <div class="toast-body">
-                {$message['message']}
-            </div>
+            <div class="toast-body">{$message['message']}</div>
         </div>
 EOS;
             }
