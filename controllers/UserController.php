@@ -8,17 +8,12 @@ use app\core\Application;
 use app\core\Controller;
 use app\core\Request;
 use app\models\UserModel;
+use app\views\LoginView;
+use app\views\RegistrationView;
 
 
 class UserController extends Controller
 {
-    /**
-     * AuthenticationController constructor.
-     */
-    public function __construct()
-    {
-        $this->setLayout('fullpage');
-    }
 
     public function login(Request $request)
     {
@@ -31,7 +26,7 @@ class UserController extends Controller
                 return Application::$app->response->redirect("/");
             }
         }
-        return $this->render("LoginView", [
+        return $this->render(LoginView::class, [
             "model" => $userModel
         ]);
     }
@@ -46,7 +41,7 @@ class UserController extends Controller
             }
         }
 
-        return  $this->render("RegistrationView", [
+        return  $this->render(RegistrationView::class, [
             "model" => $userModel
         ]);
     }

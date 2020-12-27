@@ -5,6 +5,7 @@ namespace app\core;
 
 
 use app\controllers\SiteController;
+use app\views\NotFoundView;
 
 class Router
 {
@@ -37,9 +38,9 @@ class Router
         if ($callback === false) {
             $controller = new SiteController();
             $this->response->setStatusCode(404);
-            return $controller->renderView("NotFoundView");
+            return $controller->render(NotFoundView::class);
         } else if (is_string($callback)) {
-            return Application::$app->getController()->renderView($callback);
+            return Application::$app->getController()->render($callback);
         } else if (is_callable($callback)) {
             if (is_array($callback)) {
                 $callback[0] = new $callback[0]();

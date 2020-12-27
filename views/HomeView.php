@@ -1,3 +1,12 @@
-<h1>Home</h1>
-<h3>Welcome <?php echo $name; ?></h3>
+<?php
 
+
+namespace app\views;
+
+
+use app\core\View;
+
+class HomeView extends View
+{
+
+}

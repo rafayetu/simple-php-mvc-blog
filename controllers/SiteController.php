@@ -4,9 +4,10 @@
 namespace app\controllers;
 
 
-use app\core\Application;
 use app\core\Controller;
-use app\core\Request;
+use app\views;
+
+
 
 class SiteController extends Controller
 {
@@ -15,7 +16,7 @@ class SiteController extends Controller
         $params = [
             "name" => "Simple MVC Blog"
         ];
-        return $this->render("HomeView", $params);
+        return $this->render(views\HomeView::class, $params);
     }
 
 
@@ -24,25 +25,16 @@ class SiteController extends Controller
         $params = [
             "name" => "Simple MVC Blog"
         ];
-        return $this->render("ContactView", $params);
+        return $this->render(views\ContactView::class, $params);
     }
 
-    public function handleContact(Request $request)
-    {
-        $body = $request->getBody();
-        echo "<pre>";
-        var_dump($body);
-        echo "</pre>";
-        exit;
-        return "Contact POST";
-    }
 
     public function postWrite()
     {
         $params = [
             "name" => "Simple MVC Blog"
         ];
-        return $this->render("PostWriteView", $params);
+        return $this->render(views\PostWriteView::class, $params);
     }
 
 

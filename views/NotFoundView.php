@@ -1,1 +1,12 @@
-<h1>Not Found</h1>
+<?php
+
+
+namespace app\views;
+
+
+use app\core\View;
+
+class NotFoundView extends View
+{
+
+}
