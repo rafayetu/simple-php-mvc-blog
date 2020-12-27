@@ -12,7 +12,7 @@ abstract class Model
     public bool $isFormValid = true;
     protected Database $db;
     protected Session $session;
-    protected IntegerModelField $id;
+    public IntegerModelField $id;
 
     public function __construct()
     {
@@ -26,7 +26,6 @@ abstract class Model
         $this->isFormValid = true;
         foreach ($data as $key => $value) {
             if (property_exists($this, $key)) {
-
                 if (!$this->validate($key, $value)) {
 
                     $this->isFormValid = false;
@@ -88,4 +87,6 @@ abstract class Model
             }
         }
     }
+
+
 }

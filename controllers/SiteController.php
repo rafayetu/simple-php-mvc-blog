@@ -29,13 +29,6 @@ class SiteController extends Controller
     }
 
 
-    public function postWrite()
-    {
-        $params = [
-            "name" => "Simple MVC Blog"
-        ];
-        return $this->render(views\PostWriteView::class, $params);
-    }
 
 
 }

@@ -40,7 +40,6 @@ class UserController extends Controller
                 return Application::$app->response->redirect("/");
             }
         }
-
         return  $this->render(RegistrationView::class, [
             "model" => $userModel
         ]);

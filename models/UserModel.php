@@ -48,7 +48,7 @@ class UserModel extends Model
         $this->password->setRequired(true);
         $this->confirmPassword->setRequired(true);
         $this->status->setMax(self::STATUS_DELETED)->setDefault(self::STATUS_ACTIVE);
-
+        return $this;
     }
 
     public function register()
@@ -122,18 +122,24 @@ class UserModel extends Model
     public function verifyUser(){
         $user_id = $this->sessionModel->getSessionUserID();
         if ($user_id){
-            $this->loadData(["id" => $user_id]);
-            $record = $this->db->selectObject(self::DB_TABLE,
-                $searchQuery=[$this->id],
-                $columns=[$this->email, $this->firstname, $this->lastname]
-            );
-            $this->setProperties($record);
+            $this->setUserFromID($user_id);
             $this->isUserLoggedIn = true;
             return $this->isUserLoggedIn;
         } else {
             $this->isUserLoggedIn = false;
             return false;
         }
+    }
+
+    public function setUserFromID($user_id)
+    {
+        $this->loadData(["id" => $user_id]);
+        $record = $this->db->selectObject(self::DB_TABLE,
+            $searchQuery=[$this->id],
+            $columns=[$this->email, $this->firstname, $this->lastname]
+        );
+        $this->setProperties($record);
+        return $this;
     }
 
 
@@ -149,6 +155,10 @@ class UserModel extends Model
 
     public function getFullName() :string
     {
-        return $this->isUserLoggedIn ? "$this->firstname $this->lastname" :  "Anonymous";
+        return $this->firstname->getValue() ? "$this->firstname $this->lastname" :  "Anonymous";
+    }
+
+    public function isCurrentUser(){
+        return $this->id->getValue() == Application::$app->user->id->getValue() ;
     }
 }

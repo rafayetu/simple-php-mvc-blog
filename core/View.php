@@ -8,12 +8,20 @@ abstract class View
 {
     const MAIN = "main";
     const FULLPAGE = "fullpage";
+    const HOME = "home";
     protected string $layout = self::MAIN;
     protected string $template;
+    protected string $content = "";
+    protected string $layoutContent = "";
+    protected string $extra_js = "";
+    protected string $extra_css = "";
+    protected string $extra_header = "";
+    protected array $placeholders;
 
     public function __construct()
     {
         $this->setDefaultTemplate();
+        $this->placeholders = ["content", "extra_js", "extra_css", "extra_header"];
     }
 
 
@@ -24,10 +32,21 @@ abstract class View
 
     public function renderView(array $params = [])
     {
-        $layoutContent = $this->layoutContent($params);
-        $viewContent = $this->renderOnlyView($params);
-        return str_replace("{{content}}", $viewContent, $layoutContent);
+        $this->layoutContent = $this->layoutContent($params);
+        $this->content = $this->renderOnlyView($params);
+        $this->replacePlaceholders();
+        return $this->layoutContent;
     }
+
+    private function replacePlaceholders()
+    {
+        foreach ($this->placeholders as $ph) {
+            if (property_exists($this, $ph)) {
+                $this->layoutContent = str_replace("{{" . $ph . "}}", $this->$ph, $this->layoutContent);
+            }
+        }
+    }
+
 
     protected function layoutContent($params)
     {
@@ -75,4 +94,20 @@ abstract class View
         $this->setTemplate(str_replace("View", "Template", end($viewPath)));
 
     }
+    private function loadExtraCSS()
+    {
+        ob_start();?>
+        <?php
+        $this->extra_css = ob_get_clean();
+        ob_flush();
+    }
+
+    private function loadExtraJS()
+    {
+        ob_start();?>
+        <?php
+        $this->extra_js = ob_get_clean();
+        ob_flush();
+    }
+
 }

@@ -16,17 +16,6 @@
 <?php include_once "messages.php"?>
 
 <div class="container">
-
-<!--    --><?php
-//    foreach ($errors as $key => $value){
-//        foreach ($value['messages'] as $message){
-//        ?>
-<!--        <div class="alert alert-danger alert-dismissible fade show" role="alert">-->
-<!--            <strong>--><?php //echo $value['name'] ?><!--: </strong> --><?php //echo $message; ?>
-<!--            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>-->
-<!--        </div>--><?php
-//        }
-//    } ?>
     {{content}}
 </div>
 

@@ -10,4 +10,12 @@ abstract class Controller
         $view = new $view();
         return $view->render($params);
     }
+
+    public function loginRequired()
+    {
+        if (!Application::$app->user->isUserLoggedIn){
+            Application::$app->response->redirect("/login");
+            exit();
+        }
+    }
 }

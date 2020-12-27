@@ -10,10 +10,11 @@ class Request
     {
         $path = $_SERVER['REQUEST_URI'] ?? "/";
         $position = strpos($path, '?');
-        if ($position === false) {
-            return $path;
+        if ($position !== false) {
+             $path = substr($path, 0, $position);
         }
-        return substr($path, 0, $position);
+        $path = explode("/", trim($path, "/"));
+        return ["/$path[0]", array_slice($path, 1)];
     }
 
     public function method()

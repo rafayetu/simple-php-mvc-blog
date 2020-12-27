@@ -33,7 +33,7 @@ class Router
     {
         $path = $this->request->getPath();
         $method = $this->request->method();
-        $callback = $this->routes[$method][$path] ?? false;
+        $callback = $this->routes[$method][$path[0]] ?? false;
 
         if ($callback === false) {
             $controller = new SiteController();
