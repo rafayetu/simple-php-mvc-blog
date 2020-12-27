@@ -203,5 +203,20 @@ $app = Application::$app;
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js" integrity="sha384-pQQkAEnwaBkjpqZ8RU1fF1AKtTcHJwFl3pblpTlHXybJjHpMYo79HY3hIi4NKxyj" crossorigin="anonymous"></script>
 -->
 
+<!--    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>-->
+<script src="\vendors\tinymce_5.6.2\tinymce\js\tinymce\tinymce.min.js" referrerpolicy="origin"></script>
+
+<script>
+
+    tinymce.init({
+        selector: 'textarea#post-html-editor',
+        skin: 'bootstrap',
+        plugins: 'lists, link, image, media',
+        toolbar: 'h1 h2 bold italic strikethrough blockquote bullist numlist backcolor | link image media | removeformat help',
+        menubar: true,
+        branding: false
+    });
+</script>
+
 </body>
 </html>

@@ -19,11 +19,14 @@ $app = new Application();
 $app->router->get("/", [SiteController::class, 'home']);
 $app->router->get("/contact", [SiteController::class, 'contact']);
 $app->router->post("/contact", [SiteController::class, 'handleContact']);
+$app->router->get("/post-write", [SiteController::class, 'postWrite']);
 
 $app->router->get("/login", [UserController::class, 'login']);
 $app->router->post("/login", [UserController::class, 'login']);
 $app->router->get("/register", [UserController::class, 'register']);
 $app->router->post("/register", [UserController::class, 'register']);
 $app->router->get("/logout", [UserController::class, 'logout']);
+
+
 
 $app->run();

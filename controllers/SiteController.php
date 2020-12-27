@@ -37,4 +37,13 @@ class SiteController extends Controller
         return "Contact POST";
     }
 
+    public function postWrite()
+    {
+        $params = [
+            "name" => "Simple MVC Blog"
+        ];
+        return $this->render("PostWriteView", $params);
+    }
+
+
 }
