@@ -34,7 +34,6 @@ class PostController extends Controller
             $body["status"] = isset($body["publish"]) ? PostModel::STATUS_PENDING : PostModel::STATUS_UNPUBLISHED;
             $model->loadData($body);
             if ($post_id && $isPostExist){
-
                 $model->updatePost();
             } else {
                 if ($model->writePost()) {
@@ -54,7 +53,7 @@ class PostController extends Controller
         $post_id = $request->getPath()[1][0] ?? null;
         if ($post_id){
             if (!$model->isPostExist($post_id)){
-                return Application::$app->response->redirect($request->getPath()[0]);
+                return Application::$app->response->redirect("/");
             };
         }
 
@@ -65,6 +64,7 @@ class PostController extends Controller
 
     public function postAuthor(Request $request)
     {
+        $this->loginRequired();
         $model = new PostModel();
 //        $post_id = $request->getPath()[1][0] ?? null;
 //        if ($post_id){

@@ -26,6 +26,7 @@ class UserController extends Controller
                 return Application::$app->response->redirect("/");
             }
         }
+
         return $this->render(LoginView::class, [
             "model" => $userModel
         ]);

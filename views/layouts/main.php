@@ -46,7 +46,7 @@ $app = Application::$app;
 <body>
 <?php include_once "messages.php"?>
 
-<div class="container">
+<div class="container-fluid">
     <header class="blog-header py-3">
         <div class="row flex-nowrap justify-content-between align-items-center">
             <div class="col-4 pt-1">
@@ -75,14 +75,14 @@ $app = Application::$app;
     </header>
 </div>
 
-<main class="container">
+<main class="container-fluid">
 
     <div class="row mt-4">
-        <div class="col-md-8">
+        <div class="col-md-9">
             {{content}}
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="p-4 mb-3 bg-light rounded">
                 <h4 class="font-italic">About</h4>
                 <p class="mb-0">Etiam porta <em>sem malesuada magna</em> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.</p>

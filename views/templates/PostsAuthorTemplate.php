@@ -1,6 +1,6 @@
 <?php
 $model = $model ?? null;
-$fields = ["title", "content", "created_at", "status"];
+$fields = ["title", "created_at", "status"];
 ?>
 
 
@@ -17,7 +17,7 @@ $fields = ["title", "content", "created_at", "status"];
     </thead>
     <tbody>
     <?php
-        foreach ($model->getAuthorPosts() as $post){
+        foreach ($model->postList as $post){
             echo "<tr>";
             foreach ($fields as $field){
                 if (property_exists($post, $field)){
@@ -25,7 +25,7 @@ $fields = ["title", "content", "created_at", "status"];
                 }
             }
             echo "<td><a class='btn btn-sm btn-outline-primary m-1' href='/post-editor/{$post->id}'>Edit</a>
-                      <a class='btn btn-sm btn-outline-success m-1' href='/post/{$post->id}'>Read</a></td>";
+                  <a class='btn btn-sm btn-outline-success m-1' href='/post/{$post->id}'>Read</a></td>";
             echo "</tr>";
 
         }

@@ -22,7 +22,6 @@ class PostsAuthorView extends View
         ob_start();?>
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap5.min.css" rel="stylesheet">
-
         <?php
         $this->extra_css = ob_get_clean();
         ob_flush();
@@ -34,7 +33,6 @@ class PostsAuthorView extends View
         <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
         <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
         <script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap5.min.js"></script>
-
         <script>
             $(document).ready(function() {
                 $('#postListTable').DataTable();

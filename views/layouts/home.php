@@ -46,9 +46,9 @@ $app = Application::$app;
 <body>
 <?php include_once "messages.php" ?>
 
-<div class="container">
+<div class="container-fluid">
 
-    <header class="blog-header py-3">
+    <header class="blog-header py-4">
         <div class="row flex-nowrap justify-content-between align-items-center">
             <div class="col-4 pt-1">
                 <a class="link-secondary" href="#">Subscribe</a>
@@ -100,7 +100,7 @@ $app = Application::$app;
     </div>
 </div>
 
-<main class="container">
+<main class="container-fluid">
     <div class="p-4 p-md-5 mb-4 text-white rounded bg-dark">
         <div class="col-md-6 px-0">
             <h1 class="display-4 font-italic">Title of a longer featured blog post</h1>
@@ -156,7 +156,7 @@ $app = Application::$app;
     </div>
 
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-9">
             {{content}}
             <nav class="blog-pagination" aria-label="Pagination">
                 <a class="btn btn-outline-primary" href="#">Older</a>
@@ -165,7 +165,7 @@ $app = Application::$app;
 
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="p-4 mb-3 bg-light rounded">
                 <h4 class="font-italic">About</h4>
                 <p class="mb-0">Etiam porta <em>sem malesuada magna</em> mollis euismod. Cras mattis consectetur purus

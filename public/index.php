@@ -6,8 +6,8 @@ define("SITE_NAME", "Simple MVC Blog" );
 require_once ROOT_DIR . '/vendor/autoload.php';
 
 use app\controllers\PostController;
-use app\controllers\UserController;
 use app\controllers\SiteController;
+use app\controllers\UserController;
 use app\core\Application;
 
 Dotenv\Dotenv::createImmutable(ROOT_DIR. "/conf")->load();
@@ -31,7 +31,5 @@ $app->router->get("/post-editor", [PostController::class, 'postEditor']);
 $app->router->post("/post-editor", [PostController::class, 'postEditor']);
 $app->router->get("/post", [PostController::class, 'postRead']);
 $app->router->get("/post-list", [PostController::class, 'postAuthor']);
-
-
 
 $app->run();

@@ -27,9 +27,7 @@ abstract class Model
         foreach ($data as $key => $value) {
             if (property_exists($this, $key)) {
                 if (!$this->validate($key, $value)) {
-
                     $this->isFormValid = false;
-
                 }
             }
         }

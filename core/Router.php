@@ -39,8 +39,6 @@ class Router
             $controller = new SiteController();
             $this->response->setStatusCode(404);
             return $controller->render(NotFoundView::class);
-        } else if (is_string($callback)) {
-            return Application::$app->getController()->render($callback);
         } else if (is_callable($callback)) {
             if (is_array($callback)) {
                 $callback[0] = new $callback[0]();

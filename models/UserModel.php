@@ -155,7 +155,7 @@ class UserModel extends Model
 
     public function getFullName() :string
     {
-        return $this->firstname->getValue() ? "$this->firstname $this->lastname" :  "Anonymous";
+        return (strlen($this->firstname->getValue())>0) ? "$this->firstname $this->lastname" :  "Anonymous";
     }
 
     public function isCurrentUser(){

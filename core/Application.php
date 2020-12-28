@@ -30,7 +30,6 @@ class Application
         $this->db = new Database($config["db"]);
         $this->user = new UserModel();
         $this->user->verifyUser();
-
     }
 
     public function run()

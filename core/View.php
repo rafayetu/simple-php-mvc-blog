@@ -24,7 +24,6 @@ abstract class View
         $this->placeholders = ["content", "extra_js", "extra_css", "extra_header"];
     }
 
-
     public function render($params = [])
     {
         return $this->renderView($params);
@@ -46,7 +45,6 @@ abstract class View
             }
         }
     }
-
 
     protected function layoutContent($params)
     {
@@ -94,9 +92,10 @@ abstract class View
         $this->setTemplate(str_replace("View", "Template", end($viewPath)));
 
     }
+
     private function loadExtraCSS()
     {
-        ob_start();?>
+        ob_start(); ?>
         <?php
         $this->extra_css = ob_get_clean();
         ob_flush();
@@ -104,7 +103,7 @@ abstract class View
 
     private function loadExtraJS()
     {
-        ob_start();?>
+        ob_start(); ?>
         <?php
         $this->extra_js = ob_get_clean();
         ob_flush();
