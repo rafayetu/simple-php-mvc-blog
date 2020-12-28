@@ -17,6 +17,8 @@ class UserModel extends Model
     const STATUS_INACTIVE = 0;
     const STATUS_ACTIVE = 1;
     const STATUS_DELETED = 2;
+    const ROLE_USER = 0;
+    const ROLE_ADMIN = 1;
     const DB_TABLE = "users";
 
     private SessionModel $sessionModel;
@@ -28,6 +30,7 @@ class UserModel extends Model
     public PasswordModelField $password;
     public PasswordModelField $confirmPassword;
     public StatusModelField $status;
+    public StatusModelField $role;
 
 
     public function __construct()
@@ -41,6 +44,7 @@ class UserModel extends Model
         $this->password = new PasswordModelField($name = "password", $verbose = "Password");
         $this->confirmPassword = new PasswordModelField($name = "confirmPassword", $verbose = "Confirm Password");
         $this->status = new StatusModelField($name = 'status', $verbose = "Status");
+        $this->role = new StatusModelField($name = 'role', $verbose = "User Role");
 
         $this->firstname->setRequired(true)->setMin(2)->setMax(50);;
         $this->lastname->setRequired(true)->setMin(2)->setMax(50);
@@ -54,6 +58,10 @@ class UserModel extends Model
             self::STATUS_DELETED => "Deleted"
         ])->setDefault(self::STATUS_ACTIVE);
 
+        $this->role->setStatusList([
+            self::ROLE_USER => "User",
+            self::ROLE_ADMIN => "Admin"
+        ])->setDefault(self::ROLE_USER);
         return $this;
     }
 
@@ -116,7 +124,7 @@ class UserModel extends Model
     {
         $record = $this->db->selectObject(self::DB_TABLE,
             $searchQuery = [$this->email],
-            $columns = [$this->id, $this->firstname, $this->lastname]
+            $columns = [$this->id, $this->firstname, $this->lastname, $this->status, $this->role]
         );
         $this->setProperties($record);
         $this->sessionModel->generateSession($this);
@@ -144,7 +152,7 @@ class UserModel extends Model
         $this->loadData(["id" => $user_id]);
         $record = $this->db->selectObject(self::DB_TABLE,
             $searchQuery = [$this->id],
-            $columns = [$this->email, $this->firstname, $this->lastname]
+            $columns = [$this->email, $this->firstname, $this->lastname, $this->status, $this->role]
         );
         $this->setProperties($record);
         return $this;
@@ -175,5 +183,10 @@ class UserModel extends Model
     public function isCurrentUser()
     {
         return $this->id->getValue() == Application::$app->user->id->getValue();
+    }
+
+    public function isAdminUser()
+    {
+        return $this->role->getValue() == self::ROLE_ADMIN;
     }
 }

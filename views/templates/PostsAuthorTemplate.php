@@ -2,8 +2,6 @@
 $model = $model ?? null;
 $fields = ["title", "created_at", "status"];
 ?>
-
-
 <table id="postListTable" class="table table-striped table-bordered" style="width:100%">
     <thead>
     <?php

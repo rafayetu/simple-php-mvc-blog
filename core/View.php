@@ -16,6 +16,7 @@ abstract class View
     protected string $extra_css = "";
     protected string $extra_header = "";
     protected array $placeholders;
+    public bool $putTitle = true;
 
     public function __construct()
     {
@@ -30,6 +31,7 @@ abstract class View
 
     public function renderView(array $params = [])
     {
+        $params["view"] = $this;
         $this->layoutContent = $this->layoutContent($params);
         $this->content = $this->renderOnlyView($params);
         $this->replacePlaceholders();
@@ -107,5 +109,17 @@ abstract class View
         $this->extra_js = ob_get_clean();
         ob_flush();
     }
+
+    public function getUserButtons()
+    {
+
+    }
+
+    public function getTitle()
+    {
+        $route = Application::$app->router->getRoute();
+        return $route ? $route["title"] : "Not Found";
+    }
+
 
 }

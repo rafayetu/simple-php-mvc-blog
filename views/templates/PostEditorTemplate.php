@@ -5,7 +5,6 @@ use app\core\Form;
 
 <div class="row ">
     <div class="col-12">
-        <h1 class="h2 mb-4">Write a post</h1>
         <?php
         $form = Form::begin('', 'post');
         $model = $model ?? null;
