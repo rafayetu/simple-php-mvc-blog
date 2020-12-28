@@ -21,7 +21,12 @@ $fields = ["title", "created_at", "status"];
             echo "<tr>";
             foreach ($fields as $field){
                 if (property_exists($post, $field)){
-                    echo "<td>{$post->$field}</td>";
+                    if ($field=="status"){
+                        echo "<td>{$post->$field->getName()}</td>";
+                    } else {
+                        echo "<td>{$post->$field}</td>";
+                    }
+
                 }
             }
             echo "<td><a class='btn btn-sm btn-outline-primary m-1' href='/post-editor/{$post->id}'>Edit</a>

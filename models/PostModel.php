@@ -8,6 +8,7 @@ use app\core\Application;
 use app\core\Model;
 use app\models\fields\DateTimeModelField;
 use app\models\fields\IntegerModelField;
+use app\models\fields\StatusModelField;
 use app\models\fields\TextModelField;
 
 class PostModel extends Model
@@ -15,7 +16,7 @@ class PostModel extends Model
     const STATUS_UNPUBLISHED = 0;
     const STATUS_PENDING = 1;
     const STATUS_PUBLISHED = 2;
-    const STATUS_DELETED = 4;
+    const STATUS_DELETED = 3;
     const DB_TABLE = "posts";
 
     private SessionModel $sessionModel;
@@ -26,7 +27,7 @@ class PostModel extends Model
     public TextModelField $content;
     public DateTimeModelField $created_at;
     public DateTimeModelField $published_at;
-    public IntegerModelField $status;
+    public StatusModelField $status;
     public DateTimeModelField $last_updated_at;
     public UserModel $author;
     public array $postList;
@@ -38,14 +39,20 @@ class PostModel extends Model
         $this->author_id = new IntegerModelField("author_id", "Author ID");
         $this->title = new TextModelField("title", "Post Title");
         $this->content = new TextModelField("content", "Post Content");
-        $this->status = new IntegerModelField("status", "Status");
+        $this->status = new StatusModelField("status", "Status");
         $this->created_at = new DateTimeModelField("created_at", "Created At");
         $this->published_at = new DateTimeModelField("published_at", "Published At");
         $this->last_updated_at = new DateTimeModelField("last_updated_at", "Last Updated At");
 
         $this->title->setMin(10)->setMax(512)->setRequired(true);
         $this->content->setMin(10)->setMax(65535)->setRequired(true);
-        $this->status->setMax(self::STATUS_DELETED)->setDefault(self::STATUS_UNPUBLISHED);
+//        $this->status->setMax(self::STATUS_DELETED)->setDefault(self::STATUS_UNPUBLISHED);
+        $this->status->setStatusList([
+            self::STATUS_UNPUBLISHED =>  "Unpublished",
+            self::STATUS_PENDING =>  "Pending",
+            self::STATUS_PUBLISHED =>  "Published",
+            self::STATUS_DELETED =>  "Deleted",
+        ])->setDefault(self::STATUS_UNPUBLISHED);
     }
 
     public function writePost()
