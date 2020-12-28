@@ -84,7 +84,6 @@ class PostController extends Controller
 
     public function postList(Request $request)
     {
-        $this->loginRequired();
         $model = new PostModel();
 
         $model->getAuthorPosts();
