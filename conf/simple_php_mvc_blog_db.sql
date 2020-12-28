@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 28, 2020 at 12:00 PM
+-- Generation Time: Dec 28, 2020 at 08:46 PM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 7.4.13
 
@@ -20,6 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `simple_php_mvc_blog_db`
 --
+CREATE DATABASE IF NOT EXISTS `simple_php_mvc_blog_db` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+USE `simple_php_mvc_blog_db`;
 
 -- --------------------------------------------------------
 
@@ -27,6 +29,7 @@ SET time_zone = "+00:00";
 -- Table structure for table `comments`
 --
 
+DROP TABLE IF EXISTS `comments`;
 CREATE TABLE `comments` (
   `id` int(11) NOT NULL,
   `author_id` int(11) NOT NULL,
@@ -43,6 +46,7 @@ CREATE TABLE `comments` (
 -- Table structure for table `posts`
 --
 
+DROP TABLE IF EXISTS `posts`;
 CREATE TABLE `posts` (
   `id` int(11) NOT NULL,
   `author_id` int(11) NOT NULL,
@@ -60,6 +64,7 @@ CREATE TABLE `posts` (
 -- Table structure for table `sessions`
 --
 
+DROP TABLE IF EXISTS `sessions`;
 CREATE TABLE `sessions` (
   `id` int(11) NOT NULL,
   `session_key` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
@@ -75,12 +80,14 @@ CREATE TABLE `sessions` (
 -- Table structure for table `users`
 --
 
+DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `firstname` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `lastname` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `status` tinyint(1) NOT NULL,
+  `role` tinyint(4) NOT NULL,
   `password` varchar(512) COLLATE utf8_unicode_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
