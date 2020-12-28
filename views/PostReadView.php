@@ -4,9 +4,8 @@
 namespace app\views;
 
 
-use app\core\View;
 
-class PostReadView extends View
+class PostReadView extends PostEditorView
 {
 
 }

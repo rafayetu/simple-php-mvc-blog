@@ -87,4 +87,14 @@ class Database
 
 
     }
+
+    public function deleteFromTable(string $tableName, array $searchQuery)
+    {
+        $searchQueryKeys = $searchQuery ? array_map(fn($obj) => "$obj->name=:$obj->name", $searchQuery) : ["1"];
+        $statement = $this->prepare("DELETE FROM $tableName 
+                                    WHERE " . implode(" AND ", $searchQueryKeys), $searchQuery);
+        $statement->execute();
+        return $statement;
+
+    }
 }

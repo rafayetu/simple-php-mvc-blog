@@ -30,6 +30,7 @@ $app->router->get("/logout", [UserController::class, 'logout']);
 $app->router->get("/post-editor", [PostController::class, 'postEditor']);
 $app->router->post("/post-editor", [PostController::class, 'postEditor']);
 $app->router->get("/post", [PostController::class, 'postRead']);
+$app->router->post("/post", [PostController::class, 'postRead']);
 $app->router->get("/post-list", [PostController::class, 'postAuthor']);
 
 $app->run();

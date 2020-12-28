@@ -19,20 +19,20 @@ class UserController extends Controller
     {
         $userModel = Application::$app->user;
 
-        if ($request->isPost()){
+        if ($request->isPost()) {
 
             $userModel->loadData($request->getBody());
             if ($userModel->login()) {
                 return Application::$app->response->redirect("/");
             }
         }
-
         return $this->render(LoginView::class, [
             "model" => $userModel
         ]);
     }
 
-    public function register(Request $request){
+    public function register(Request $request)
+    {
         $userModel = Application::$app->user;
 
         if ($request->isPost()) {
@@ -41,7 +41,7 @@ class UserController extends Controller
                 return Application::$app->response->redirect("/");
             }
         }
-        return  $this->render(RegistrationView::class, [
+        return $this->render(RegistrationView::class, [
             "model" => $userModel
         ]);
     }

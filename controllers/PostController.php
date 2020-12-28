@@ -7,6 +7,7 @@ namespace app\controllers;
 use app\core\Application;
 use app\core\Controller;
 use app\core\Request;
+use app\models\CommentModel;
 use app\models\PostModel;
 use app\views\LoginView;
 use app\views\PostEditorView;
@@ -30,7 +31,7 @@ class PostController extends Controller
 
         if ($request->isPost()){
             $body = $request->getBody();
-            $body["author_id"] = Application::$app->user->id->getValue();
+            $body["author_id"] = $this->currentUserID();
             $body["status"] = isset($body["publish"]) ? PostModel::STATUS_PENDING : PostModel::STATUS_UNPUBLISHED;
             $model->loadData($body);
             if ($post_id && $isPostExist){
@@ -49,12 +50,39 @@ class PostController extends Controller
 
     public function postRead(Request $request)
     {
+        $isPostExist = false;
         $model = new PostModel();
         $post_id = $request->getPath()[1][0] ?? null;
         if ($post_id){
-            if (!$model->isPostExist($post_id)){
-                return Application::$app->response->redirect("/");
+            $isPostExist = $model->isPostExist($post_id);
+            if (!$isPostExist){
+                return $this->redirect("/");
             };
+        } else {
+            return  $this->redirect("/");
+        }
+
+        if ($request->isPost()){
+            $body = $request->getBody();
+            $body["author_id"] = $this->currentUserID();
+            $body["post_id"] = $post_id;
+
+            if (isset($body["comment"]) && $isPostExist){
+                $this->loginRequired();
+                $commentModel = new CommentModel();
+                $commentModel->loadData($body);
+                if ($commentModel->writeComment()) {
+                    return $this->redirect("{$request->getPath()[0]}/$post_id");
+                }
+            } elseif (isset($body["delete-comment"]) && $isPostExist){
+                $this->loginRequired();
+                $body["id"] = $body["delete-comment"];
+                $commentModel = new CommentModel();
+                $commentModel->loadData($body);
+                if ($commentModel->deleteComment()) {
+                    return $this->redirect("{$request->getPath()[0]}/$post_id");
+                }
+            }
         }
 
         return $this->render(PostReadView::class, [

@@ -18,4 +18,14 @@ abstract class Controller
             exit();
         }
     }
+
+    public function currentUserID()
+    {
+        return Application::$app->user->id->getValue();
+    }
+
+    public function redirect($path)
+    {
+        return Application::$app->response->redirect($path);
+    }
 }

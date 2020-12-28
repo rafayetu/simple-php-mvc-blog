@@ -142,7 +142,6 @@ class UserModel extends Model
         return $this;
     }
 
-
     public function isUserExist()
     {
         $record = $this->db->selectObject(self::DB_TABLE, [$this->email], [$this->email]);

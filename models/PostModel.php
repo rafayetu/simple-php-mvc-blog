@@ -31,6 +31,7 @@ class PostModel extends Model
     public TextModelField $last_updated_at;
     public UserModel $author;
     public array $postList;
+    public array $commentList;
 
     public function __construct()
     {
@@ -104,4 +105,10 @@ class PostModel extends Model
         return $this->postList;
     }
 
+    public function loadComments()
+    {
+        $comment = new CommentModel();
+        $this->commentList = $comment->getPostComments($this);
+        return $this->commentList;
+    }
 }

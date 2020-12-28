@@ -35,4 +35,20 @@ class PostEditorView extends View
         ob_flush();
     }
 
+    private function loadExtraCSS()
+    {
+        ob_start(); ?>
+        <style>
+            .float-right {
+                float: right !important;
+
+            .row {
+                margin-left: auto !important;
+            }
+            }
+        </style>
+        <?php
+        $this->extra_css = ob_get_clean();
+        ob_flush();
+    }
 }
