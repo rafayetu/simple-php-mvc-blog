@@ -103,19 +103,21 @@ class PostModel extends Model
     }
     public function getAuthorPosts()
     {
-        return $this->getPosts(true, false);
+        return $this->getPosts(true, false, null, true);
     }
 
     public function getHomePosts()
     {
         return $this->getPosts(false, true, self::STATUS_PUBLISHED);
     }
-    public function getPosts($isAuthorPosts=false, $loadContent=false, $postStatus=null)
+    public function getPosts($isAuthorPosts=false, $loadContent=false, $postStatus=null, $currentUser=false)
     {
         $searchQuery = [];
         $columns = [$this->id, $this->author_id, $this->title, $this->created_at, $this->published_at, $this->status];
-        if ($isAuthorPosts){
+        if ($currentUser){
             $this->loadData(["author_id"=>$this->currentUserID()]);
+        }
+        if ($isAuthorPosts){
             array_push($searchQuery, $this->author_id);
         }
         if (!is_null($postStatus)){

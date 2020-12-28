@@ -144,9 +144,15 @@ class UserModel extends Model
 
     public function isUserExist()
     {
-        $record = $this->db->selectObject(self::DB_TABLE, [$this->email], [$this->email]);
+        return $this->isValidUser($this->email);
+    }
+
+    public function isValidUser($searchField)
+    {
+        $record = $this->db->selectObject(self::DB_TABLE, [$searchField], [$this->email]);
         return ($record) ? true : false;
     }
+
 
     public function isNewUser(){
         return !$this->isUserExist();

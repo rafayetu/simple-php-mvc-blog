@@ -15,6 +15,8 @@ abstract class Controller
     {
         if (!Application::$app->user->isUserLoggedIn){
             Application::$app->response->redirect("/login");
+            Application::$app->session->setMessage("warning", "Login Required",
+                "You need to login to access the requested page");
             exit();
         }
     }

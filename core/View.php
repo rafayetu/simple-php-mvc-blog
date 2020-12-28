@@ -8,7 +8,6 @@ abstract class View
 {
     const MAIN = "main";
     const FULLPAGE = "fullpage";
-    const HOME = "home";
     protected string $layout = self::MAIN;
     protected string $template;
     protected string $content = "";
