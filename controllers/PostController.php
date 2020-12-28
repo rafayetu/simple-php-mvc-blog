@@ -13,15 +13,15 @@ use app\models\UserModel;
 use app\views\HomeView;
 use app\views\LoginView;
 use app\views\PostEditorView;
+use app\views\PostModerationView;
 use app\views\PostReadView;
-use app\views\PostsAuthorView;
+use app\views\PostListView;
 
 class PostController extends Controller
 {
     public function postEditor(Request $request)
     {
         $isPostExist = false;
-        $this->loginRequired();
         $model = new PostModel();
         $post_id = $request->getPath()[1][0] ?? null;
         if ($post_id){
@@ -41,7 +41,7 @@ class PostController extends Controller
             } else {
                 $model->writePost();
             }
-            return $this->redirect(PostsAuthorView::PATH);
+            return $this->redirect(PostListView::PATH);
         }
         return $this->render(PostEditorView::class, ["model" => $model]);
     }
@@ -82,14 +82,33 @@ class PostController extends Controller
         return $this->render(PostReadView::class, ["model" => $model]);
     }
 
-    public function postAuthor(Request $request)
+    public function postList(Request $request)
     {
         $this->loginRequired();
         $model = new PostModel();
 
         $model->getAuthorPosts();
 
-        return $this->render(PostsAuthorView::class, ["model" => $model]);
+        return $this->render(PostListView::class, ["model" => $model]);
+    }
+
+
+    public function postModeration(Request $request)
+    {
+        $model = new PostModel();
+        if ($request->isPost()) {
+            if (Application::$app->user->isAdminUser()){
+                $body = $request->getBody();
+                $model->loadData($body);
+                $model->updateStatus();
+            }
+
+            return $this->redirectSameURI();
+
+        }
+
+            $model->getPosts();
+        return $this->render(PostModerationView::class, ["model" => $model]);
     }
 
     public function postAll(Request $request)

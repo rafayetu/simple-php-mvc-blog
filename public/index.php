@@ -38,9 +38,11 @@ $app->router->setRoute("/post", [PostController::class, 'postRead'],
     Router::PERMISSION_PUBLIC, "Post", "post");
 $app->router->setRoute("/post-editor", [PostController::class, 'postEditor'],
     Router::PERMISSION_USER, "Write a Post", "post-editor");
-$app->router->setRoute("/post-list", [PostController::class, 'postAuthor'],
+$app->router->setRoute("/post-list", [PostController::class, 'postList'],
     Router::PERMISSION_USER, "Post List", "post-list");
 
+$app->router->setRoute("/post-moderation", [PostController::class, 'postModeration'],
+    Router::PERMISSION_ADMIN, "Post Moderation", "post-moderation");
 
 
 $app->run();

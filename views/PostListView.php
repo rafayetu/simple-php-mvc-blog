@@ -6,9 +6,10 @@ namespace app\views;
 
 use app\core\View;
 
-class PostsAuthorView extends View
+class PostListView extends View
 {
     const PATH = "/post-list";
+    public string $datatableID = "postListTable";
 
     public function __construct()
     {
@@ -18,7 +19,7 @@ class PostsAuthorView extends View
     }
 
 
-    private function loadExtraCSS()
+    protected function loadExtraCSS()
     {
         ob_start();?>
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" rel="stylesheet">
@@ -26,22 +27,26 @@ class PostsAuthorView extends View
         <?php
         $this->extra_css = ob_get_clean();
         ob_flush();
+        return $this->extra_css;
     }
 
-    private function loadExtraJS()
+    protected function loadExtraJS()
     {
-        ob_start();?>
+        ob_start();
+        echo "<script>var tableID = '{$this->datatableID}';</script>";
+        ?>
         <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
         <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
         <script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap5.min.js"></script>
         <script>
             $(document).ready(function() {
-                $('#postListTable').DataTable();
+                $(tableID).DataTable();
             } );
         </script>
         <?php
         $this->extra_js = ob_get_clean();
         ob_flush();
+        return $this->extra_js;
     }
 
 

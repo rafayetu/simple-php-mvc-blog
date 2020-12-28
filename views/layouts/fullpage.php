@@ -10,6 +10,7 @@
           integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/fullpage.css">
+<!--    <link rel="stylesheet" href="/css/blog.css">-->
 
     <title>Hello, world! </title>
 
@@ -20,8 +21,11 @@
 <div class="back">
     <div class="div-center">
         <div class="content">
-            <h1 class="h1 mb-3"><?php echo SITE_NAME; ?></h1>
-            <h3 class="mb-3"><?php echo $view->getTitle(); ?></h3>
+            <div class="text-center">
+                <h1 class="h1 mb-4"><?php echo SITE_NAME; ?></h1>
+                <h4 class="mb-3"><?php echo $view->getTitle(); ?></h4>
+            </div>
+
 
             {{content}}
         </div>

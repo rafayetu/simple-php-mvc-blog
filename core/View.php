@@ -94,7 +94,7 @@ abstract class View
 
     }
 
-    private function loadExtraCSS()
+    protected function loadExtraCSS()
     {
         ob_start(); ?>
         <?php
@@ -102,7 +102,7 @@ abstract class View
         ob_flush();
     }
 
-    private function loadExtraJS()
+    protected function loadExtraJS()
     {
         ob_start(); ?>
         <?php

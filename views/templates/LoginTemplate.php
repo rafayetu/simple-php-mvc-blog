@@ -7,7 +7,7 @@ $model = $model ?? null;
 
 echo $form->field($model, 'email', 'email');
 echo $form->field($model, 'password', 'password');
-echo '<button type="submit" class="btn btn-primary">Login</button>';
+echo $form->button("Login")  ;
 Form::end();
 ?>
 

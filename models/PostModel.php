@@ -90,9 +90,13 @@ class PostModel extends Model
 
     public function updatePost()
     {
+        $updateFields = [$this->title, $this->content];
+        if (in_array($this->status->getValue(), [self::STATUS_PENDING, self::STATUS_UNPUBLISHED]) ){
+            array_push($updateFields, $this->status);
+        }
         if ($this->isFormValid) {
             $this->db->updateTable(self::DB_TABLE,
-                [$this->id], [$this->title, $this->content]);
+                [$this->id], $updateFields);
             $this->session->setMessage("info", "Post Updated",
                 "You have successfully updated your post");
 
@@ -146,5 +150,16 @@ class PostModel extends Model
         $comment = new CommentModel();
         $this->commentList = $comment->getPostComments($this);
         return $this->commentList;
+    }
+
+    public function updateStatus()
+    {
+        if ($this->isFormValid) {
+            $this->db->updateTable(self::DB_TABLE,
+                [$this->id], [$this->status]);
+            $this->session->setMessage("info", "Post Status Updated",
+                "You have successfully updated post status");
+
+        }
     }
 }

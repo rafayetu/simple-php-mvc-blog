@@ -49,6 +49,7 @@ $view = $view ?? null;
     <!-- Custom styles for this template -->
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/blog.css">
+
     {{extra_css}}
 </head>
 <body>
@@ -89,8 +90,6 @@ $view = $view ?? null;
         <?php if ($view->putTitle){
             echo "<h1 class='mb-3'>{$view->getTitle()}</h1>";
         }?>
-
-
 
         <div class="col-md-9">
             {{content}}

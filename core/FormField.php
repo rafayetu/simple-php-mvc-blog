@@ -39,11 +39,12 @@ class FormField
         $attribute = $this->attribute;
         $field = $model->{$attribute};
         $labelVisibility = $this->labelVisibility ? "" : 'style="display: none"';
+        $extra = implode(" ", array_map(fn($e)=> "$e='{$this->extra[$e]}'" , array_keys($this->extra)));
 
         return sprintf('<div class="form-floating mb-3">
             
             <input type="%s" name="%s" class="form-control %s"
-                   id="%s" value="%s">
+                   id="%s" value="%s" %s>
             <label for="%s"  %s>%s</label>
             <div class="invalid-feedback">
                 %s
@@ -54,6 +55,7 @@ class FormField
             $model->hasError($attribute)? 'is-invalid' : "",
             $attribute,
             $field->getValue(),
+            $extra,
             $attribute,
             $labelVisibility,
             $field->verbose,
