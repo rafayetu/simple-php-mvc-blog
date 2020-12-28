@@ -8,6 +8,7 @@ use app\core\View;
 
 class PostsAuthorView extends View
 {
+    const PATH = "/post-list";
 
     public function __construct()
     {

@@ -4,8 +4,8 @@
 namespace app\models;
 
 
-use app\core\Application;
 use app\core\Model;
+use app\models\fields\DateTimeModelField;
 use app\models\fields\IntegerModelField;
 use app\models\fields\TextModelField;
 
@@ -23,9 +23,9 @@ class CommentModel extends Model
     public IntegerModelField $author_id;
     public IntegerModelField $post_id;
     public TextModelField $content;
-    public TextModelField $created_at;
+    public DateTimeModelField $created_at;
     public IntegerModelField $status;
-    public TextModelField $last_updated_at;
+    public DateTimeModelField $last_updated_at;
     public UserModel $author;
     public PostModel $post;
     public array $commentList;
@@ -37,8 +37,8 @@ class CommentModel extends Model
         $this->post_id = new IntegerModelField("post_id", "Post ID");
         $this->content = new TextModelField("content", "Comment Content");
         $this->status = new IntegerModelField("status", "Status");
-        $this->created_at = new TextModelField("created_at", "Created At");
-        $this->last_updated_at = new TextModelField("last_updated_at", "Last Updated At");
+        $this->created_at = new DateTimeModelField("created_at", "Created At");
+        $this->last_updated_at = new DateTimeModelField("last_updated_at", "Last Updated At");
 
         $this->post_id->setRequired(true);
         $this->content->setMin(10)->setMax(65535)->setRequired(true);
@@ -51,6 +51,9 @@ class CommentModel extends Model
         if ($this->isFormValid) {
             $this->db->insertIntoTable(self::DB_TABLE,
                 [$this->author_id, $this->post_id, $this->content, $this->status]);
+            $this->session->setMessage("info", "Comment Posted",
+                "You have successfully posted a comment");
+
             return true;
         } else {
             return false;
@@ -91,5 +94,7 @@ class CommentModel extends Model
     public function deleteComment()
     {
         $this->db->deleteFromTable(self::DB_TABLE, [$this->id, $this->author_id]);
+        $this->session->setMessage("info", "Comment Deleted",
+            "You comment successfully deleted ");
     }
 }

@@ -6,9 +6,8 @@ namespace app\models;
 
 use app\core\Application;
 use app\core\Model;
-use app\models\fields\EmailModelField;
+use app\models\fields\DateTimeModelField;
 use app\models\fields\IntegerModelField;
-use app\models\fields\PasswordModelField;
 use app\models\fields\TextModelField;
 
 class PostModel extends Model
@@ -25,10 +24,10 @@ class PostModel extends Model
     public IntegerModelField $author_id;
     public TextModelField $title;
     public TextModelField $content;
-    public TextModelField $created_at;
-    public TextModelField $published_at;
+    public DateTimeModelField $created_at;
+    public DateTimeModelField $published_at;
     public IntegerModelField $status;
-    public TextModelField $last_updated_at;
+    public DateTimeModelField $last_updated_at;
     public UserModel $author;
     public array $postList;
     public array $commentList;
@@ -40,9 +39,9 @@ class PostModel extends Model
         $this->title = new TextModelField("title", "Post Title");
         $this->content = new TextModelField("content", "Post Content");
         $this->status = new IntegerModelField("status", "Status");
-        $this->created_at = new TextModelField("created_at", "Created At");
-        $this->published_at = new TextModelField("published_at", "Published At");
-        $this->last_updated_at = new TextModelField("last_updated_at", "Last Updated At");
+        $this->created_at = new DateTimeModelField("created_at", "Created At");
+        $this->published_at = new DateTimeModelField("published_at", "Published At");
+        $this->last_updated_at = new DateTimeModelField("last_updated_at", "Last Updated At");
 
         $this->title->setMin(10)->setMax(512)->setRequired(true);
         $this->content->setMin(10)->setMax(65535)->setRequired(true);
@@ -54,6 +53,8 @@ class PostModel extends Model
         if ($this->isFormValid){
             $this->db->insertIntoTable(self::DB_TABLE,
                 [$this->author_id, $this->title, $this->content, $this->status]);
+            $this->session->setMessage("info", "Post Added",
+                "You have successfully added a new post");
             return true;
         } else {
             return false;
@@ -71,11 +72,11 @@ class PostModel extends Model
         $this->loadData($data);
 
         $record = $this->db->selectObject(self::DB_TABLE,
-            $searchFields, [$this->id, $this->title, $this->content, $this->author_id, $this->status]);
+            $searchFields, [$this->id, $this->title, $this->content,
+                $this->author_id, $this->status, $this->created_at, $this->published_at]);
         if ($record){
             $this->setProperties($record);
         }
-
         $user = new UserModel();
         $this->author = $user->setUserFromID($this->author_id->getValue());
         return ($record) ? true : false;
@@ -86,6 +87,9 @@ class PostModel extends Model
         if ($this->isFormValid){
             $this->db->updateTable(self::DB_TABLE,
                 [$this->id], [$this->title, $this->content]);
+            $this->session->setMessage("info", "Post Updated",
+                "You have successfully updated your post");
+
         }
     }
 

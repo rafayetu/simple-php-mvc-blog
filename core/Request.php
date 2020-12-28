@@ -17,6 +17,11 @@ class Request
         return ["/$path[0]", array_slice($path, 1)];
     }
 
+    public function getFullPath()
+    {
+        return $_SERVER['REQUEST_URI'] ?? "/";
+    }
+
     public function method()
     {
         return strtolower($_SERVER['REQUEST_METHOD']);

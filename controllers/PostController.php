@@ -25,7 +25,7 @@ class PostController extends Controller
         if ($post_id){
             $isPostExist = $model->isPostExist($post_id, $loginRequired=true);
             if (!$isPostExist){
-                return Application::$app->response->redirect($request->getPath()[0]);
+                return $this->redirect($request->getPath()[0]);
             };
         }
 
@@ -37,15 +37,11 @@ class PostController extends Controller
             if ($post_id && $isPostExist){
                 $model->updatePost();
             } else {
-                if ($model->writePost()) {
-                    return Application::$app->response->redirect("/");
-                }
+                $model->writePost();
             }
-
+            return $this->redirect(PostsAuthorView::PATH);
         }
-        return $this->render(PostEditorView::class, [
-            "model" => $model
-        ]);
+        return $this->render(PostEditorView::class, ["model" => $model]);
     }
 
     public function postRead(Request $request)
@@ -53,13 +49,12 @@ class PostController extends Controller
         $isPostExist = false;
         $model = new PostModel();
         $post_id = $request->getPath()[1][0] ?? null;
-        if ($post_id){
+        if ($post_id) {
             $isPostExist = $model->isPostExist($post_id);
-            if (!$isPostExist){
-                return $this->redirect("/");
-            };
+            if (!$isPostExist)
+                return $this->redirectHome();
         } else {
-            return  $this->redirect("/");
+            return $this->redirectHome();
         }
 
         if ($request->isPost()){
@@ -71,41 +66,27 @@ class PostController extends Controller
                 $this->loginRequired();
                 $commentModel = new CommentModel();
                 $commentModel->loadData($body);
-                if ($commentModel->writeComment()) {
-                    return $this->redirect("{$request->getPath()[0]}/$post_id");
-                }
+                $commentModel->writeComment();
             } elseif (isset($body["delete-comment"]) && $isPostExist){
                 $this->loginRequired();
                 $body["id"] = $body["delete-comment"];
                 $commentModel = new CommentModel();
                 $commentModel->loadData($body);
-                if ($commentModel->deleteComment()) {
-                    return $this->redirect("{$request->getPath()[0]}/$post_id");
-                }
+                $commentModel->deleteComment();
             }
-        }
+            return $this->redirectSameURI();
 
-        return $this->render(PostReadView::class, [
-            "model" => $model
-        ]);
+        }
+        return $this->render(PostReadView::class, ["model" => $model]);
     }
 
     public function postAuthor(Request $request)
     {
         $this->loginRequired();
         $model = new PostModel();
-//        $post_id = $request->getPath()[1][0] ?? null;
-//        if ($post_id){
-//            if (!$model->isPostExist($post_id)){
-//                return Application::$app->response->redirect($request->getPath()[0]);
-//            };
-//        }
         $model->getAuthorPosts();
 
-
-        return $this->render(PostsAuthorView::class, [
-            "model" => $model
-        ]);
+        return $this->render(PostsAuthorView::class, ["model" => $model]);
     }
 
 }

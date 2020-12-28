@@ -28,4 +28,14 @@ abstract class Controller
     {
         return Application::$app->response->redirect($path);
     }
+
+    public function redirectHome()
+    {
+        return Application::$app->response->redirect("/");
+    }
+
+    public function redirectSameURI()
+    {
+        return Application::$app->response->redirect(Application::$app->request->getFullPath());
+    }
 }

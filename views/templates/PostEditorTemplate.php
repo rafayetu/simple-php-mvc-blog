@@ -11,9 +11,9 @@ use app\core\Form;
         $model = $model ?? null;
 
         echo $form->field($model, 'title', 'text');
-        echo $form->field($model, 'content', 'textarea', ["rows"=>5]);
-        echo '<button type="submit" class="btn btn-primary" name="save">Save</button>';
-        echo '<button type="submit" class="btn btn-success mx-2" name="publish">Publish</button>';
+        echo $form->field($model, 'content', 'textarea', ["rows"=>30]);
+        echo $form->button("Save", "save", "primary");
+        echo $form->button("Publish", "publish", "success", "submit", "mx-2");
         Form::end();
         ?>
     </div>
