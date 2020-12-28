@@ -9,6 +9,7 @@ use app\core\ModelField;
 class StatusModelField extends ModelField
 {
     public array $statusList = [];
+
     public function __construct(string $name, string $verbose = null)
     {
         parent::__construct($name, 'integer', $verbose);
@@ -20,7 +21,7 @@ class StatusModelField extends ModelField
     public function convert($value)
     {
         $value = trim($value);
-        if(ctype_digit($value)){
+        if (ctype_digit($value)) {
             return intval($value);
         } elseif (!is_null($this->default) && !$value) {
             return $this->default;

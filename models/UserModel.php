@@ -9,6 +9,7 @@ use app\core\Model;
 use app\models\fields\EmailModelField;
 use app\models\fields\IntegerModelField;
 use app\models\fields\PasswordModelField;
+use app\models\fields\StatusModelField;
 use app\models\fields\TextModelField;
 
 class UserModel extends Model
@@ -26,7 +27,7 @@ class UserModel extends Model
     public EmailModelField $email;
     public PasswordModelField $password;
     public PasswordModelField $confirmPassword;
-    public IntegerModelField $status;
+    public StatusModelField $status;
 
 
     public function __construct()
@@ -39,7 +40,7 @@ class UserModel extends Model
         $this->email = new EmailModelField($name = "email", $verbose = "Email");
         $this->password = new PasswordModelField($name = "password", $verbose = "Password");
         $this->confirmPassword = new PasswordModelField($name = "confirmPassword", $verbose = "Confirm Password");
-        $this->status = new IntegerModelField($name = 'status', $verbose = "Status");
+        $this->status = new StatusModelField($name = 'status', $verbose = "Status");
 
         $this->firstname->setRequired(true)->setMin(2)->setMax(50);;
         $this->lastname->setRequired(true)->setMin(2)->setMax(50);
@@ -47,13 +48,18 @@ class UserModel extends Model
         $this->email->setUniqueMethod([$this, "isNewUser"]);
         $this->password->setRequired(true);
         $this->confirmPassword->setRequired(true);
-        $this->status->setMax(self::STATUS_DELETED)->setDefault(self::STATUS_ACTIVE);
+        $this->status->setStatusList([
+            self::STATUS_INACTIVE => "Inactive",
+            self::STATUS_ACTIVE => "Active",
+            self::STATUS_DELETED => "Deleted"
+        ])->setDefault(self::STATUS_ACTIVE);
+
         return $this;
     }
 
     public function register()
     {
-        if ($this->isFormValid && $this->email->validateUnique()){
+        if ($this->isFormValid && $this->email->validateUnique()) {
             $fields = [$this->firstname, $this->lastname, $this->email, $this->status, $this->password];
             $this->db->insertIntoTable(self::DB_TABLE, $fields);
             $this->session->setMessage("success", "Registration successful",
@@ -66,11 +72,11 @@ class UserModel extends Model
 
     public function login()
     {
-        if ($this->isFormValid ){
-            $user = $this->db->selectObject(self::DB_TABLE, $searchQuery=[$this->email, $this->status],
-                $columns=[$this->email, $this->password]);
-            if ($user){
-                if ($this->password->verify($user->password)){
+        if ($this->isFormValid) {
+            $user = $this->db->selectObject(self::DB_TABLE, $searchQuery = [$this->email, $this->status],
+                $columns = [$this->email, $this->password]);
+            if ($user) {
+                if ($this->password->verify($user->password)) {
                     $this->setUser();
                 } else {
                     $this->password->addErrorMessage("Password didn't match");
@@ -97,7 +103,7 @@ class UserModel extends Model
 
     public function formValidation()
     {
-        if ($this->confirmPassword->getDbValue()){
+        if ($this->confirmPassword->getDbValue()) {
             $validation = $this->confirmPassword->match($this->password);
             if (!$validation) {
                 $this->isFormValid = false;
@@ -106,10 +112,11 @@ class UserModel extends Model
         }
     }
 
-    private function setUser(){
+    private function setUser()
+    {
         $record = $this->db->selectObject(self::DB_TABLE,
-            $searchQuery=[$this->email],
-            $columns=[$this->id, $this->firstname, $this->lastname]
+            $searchQuery = [$this->email],
+            $columns = [$this->id, $this->firstname, $this->lastname]
         );
         $this->setProperties($record);
         $this->sessionModel->generateSession($this);
@@ -119,9 +126,10 @@ class UserModel extends Model
 
     }
 
-    public function verifyUser(){
+    public function verifyUser()
+    {
         $user_id = $this->sessionModel->getSessionUserID();
-        if ($user_id){
+        if ($user_id) {
             $this->setUserFromID($user_id);
             $this->isUserLoggedIn = true;
             return $this->isUserLoggedIn;
@@ -135,8 +143,8 @@ class UserModel extends Model
     {
         $this->loadData(["id" => $user_id]);
         $record = $this->db->selectObject(self::DB_TABLE,
-            $searchQuery=[$this->id],
-            $columns=[$this->email, $this->firstname, $this->lastname]
+            $searchQuery = [$this->id],
+            $columns = [$this->email, $this->firstname, $this->lastname]
         );
         $this->setProperties($record);
         return $this;
@@ -154,16 +162,18 @@ class UserModel extends Model
     }
 
 
-    public function isNewUser(){
+    public function isNewUser()
+    {
         return !$this->isUserExist();
     }
 
-    public function getFullName() :string
+    public function getFullName(): string
     {
-        return (strlen($this->firstname->getValue())>0) ? "$this->firstname $this->lastname" :  "Anonymous";
+        return (strlen($this->firstname->getValue()) > 0) ? "$this->firstname $this->lastname" : "Anonymous";
     }
 
-    public function isCurrentUser(){
-        return $this->id->getValue() == Application::$app->user->id->getValue() ;
+    public function isCurrentUser()
+    {
+        return $this->id->getValue() == Application::$app->user->id->getValue();
     }
 }

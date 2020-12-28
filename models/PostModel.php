@@ -46,18 +46,17 @@ class PostModel extends Model
 
         $this->title->setMin(10)->setMax(512)->setRequired(true);
         $this->content->setMin(10)->setMax(65535)->setRequired(true);
-//        $this->status->setMax(self::STATUS_DELETED)->setDefault(self::STATUS_UNPUBLISHED);
         $this->status->setStatusList([
-            self::STATUS_UNPUBLISHED =>  "Unpublished",
-            self::STATUS_PENDING =>  "Pending",
-            self::STATUS_PUBLISHED =>  "Published",
-            self::STATUS_DELETED =>  "Deleted",
+            self::STATUS_UNPUBLISHED => "Unpublished",
+            self::STATUS_PENDING => "Pending",
+            self::STATUS_PUBLISHED => "Published",
+            self::STATUS_DELETED => "Deleted",
         ])->setDefault(self::STATUS_UNPUBLISHED);
     }
 
     public function writePost()
     {
-        if ($this->isFormValid){
+        if ($this->isFormValid) {
             $this->db->insertIntoTable(self::DB_TABLE,
                 [$this->author_id, $this->title, $this->content, $this->status]);
             $this->session->setMessage("info", "Post Added",
@@ -68,11 +67,11 @@ class PostModel extends Model
         }
     }
 
-    public function isPostExist($id, $loginRequired=false)
+    public function isPostExist($id, $loginRequired = false)
     {
-        $data = ["id"=>$id];
+        $data = ["id" => $id];
         $searchFields = [$this->id];
-        if ($loginRequired){
+        if ($loginRequired) {
             $data["author_id"] = Application::$app->user->id->getValue();
             array_push($searchFields, $this->author_id);
         }
@@ -81,7 +80,7 @@ class PostModel extends Model
         $record = $this->db->selectObject(self::DB_TABLE,
             $searchFields, [$this->id, $this->title, $this->content,
                 $this->author_id, $this->status, $this->created_at, $this->published_at]);
-        if ($record){
+        if ($record) {
             $this->setProperties($record);
         }
         $user = new UserModel();
@@ -91,7 +90,7 @@ class PostModel extends Model
 
     public function updatePost()
     {
-        if ($this->isFormValid){
+        if ($this->isFormValid) {
             $this->db->updateTable(self::DB_TABLE,
                 [$this->id], [$this->title, $this->content]);
             $this->session->setMessage("info", "Post Updated",
@@ -108,6 +107,7 @@ class PostModel extends Model
         $post->author = $user->setUserFromID($post->author_id->getValue());
         return $post;
     }
+
     public function getAuthorPosts()
     {
         return $this->getPosts(true, false, null, true);
@@ -117,21 +117,22 @@ class PostModel extends Model
     {
         return $this->getPosts(false, true, self::STATUS_PUBLISHED);
     }
-    public function getPosts($isAuthorPosts=false, $loadContent=false, $postStatus=null, $currentUser=false)
+
+    public function getPosts($isAuthorPosts = false, $loadContent = false, $postStatus = null, $currentUser = false)
     {
         $searchQuery = [];
         $columns = [$this->id, $this->author_id, $this->title, $this->created_at, $this->published_at, $this->status];
-        if ($currentUser){
-            $this->loadData(["author_id"=>$this->currentUserID()]);
+        if ($currentUser) {
+            $this->loadData(["author_id" => $this->currentUserID()]);
         }
-        if ($isAuthorPosts){
+        if ($isAuthorPosts) {
             array_push($searchQuery, $this->author_id);
         }
-        if (!is_null($postStatus)){
+        if (!is_null($postStatus)) {
             $this->status->setValue($postStatus);
             array_push($searchQuery, $this->status);
         }
-        if ($loadContent){
+        if ($loadContent) {
             array_push($columns, $this->content);
         }
         $records = $this->db->selectResult(self::DB_TABLE, $searchQuery, $columns);
