@@ -110,9 +110,13 @@ abstract class View
         ob_flush();
     }
 
-    public function getUserButtons()
+    public function getUserOptions()
     {
-
+//        $publicRoutes = Application::$app->router->getPermittedRoutes(Router::PERMISSION_PUBLIC);
+        $userRoutes = Application::$app->router->getPermittedRoutes(Router::PERMISSION_USER);
+        $userRoutes = array_filter($userRoutes, fn($u) => $u["namespace"]!="logout");
+        $adminRoutes = Application::$app->router->getPermittedRoutes(Router::PERMISSION_ADMIN);
+        return [$userRoutes, $adminRoutes];
     }
 
     public function getTitle()
@@ -120,6 +124,13 @@ abstract class View
         $route = Application::$app->router->getRoute();
         return $route ? $route["title"] : "Not Found";
     }
+
+    public function getButtonFromNamespace($namespace, $extraClass="btn-outline-secondary mx-1")
+    {
+        $route = Application::$app->router->getRouteFromNamespace($namespace);
+        return $route ? "<a class='btn btn-sm $extraClass' href='{$route['path']}'>{$route["title"]}</a>" : "";
+    }
+
 
 
 }

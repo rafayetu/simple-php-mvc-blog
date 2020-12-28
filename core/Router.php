@@ -23,22 +23,24 @@ class Router
         $this->response = $response;
     }
 
-    public function get($path, $callback, $permission=self::PERMISSION_PUBLIC, $title="")
+    public function get($path, $callback, $permission = self::PERMISSION_PUBLIC, $title = "")
     {
         $this->routes['get'][$path] = $callback;
     }
 
-    public function post($path, $callback,  $permission=self::PERMISSION_PUBLIC, $title="")
+    public function post($path, $callback, $permission = self::PERMISSION_PUBLIC, $title = "")
     {
         $this->routes['post'][$path] = $callback;
     }
 
-    public function setRoute($path, $callback,  $permission=self::PERMISSION_PUBLIC, $title="")
+    public function setRoute($path, $callback, $permission = self::PERMISSION_PUBLIC, $title = "", $namespace = "")
     {
         $this->routes[$path] = [
+            "path" => $path,
             "callback" => $callback,
             "permission" => $permission,
-            "title" => $title
+            "title" => $title,
+            "namespace" => strlen($namespace) ? $namespace : $path
         ];
     }
 
@@ -68,4 +70,18 @@ class Router
         }
     }
 
+    public function getPermittedRoutes($permission)
+    {
+        return array_filter($this->routes, fn($k) => $k["permission"] == $permission);
+    }
+
+    public function getRouteFromNamespace($namespace)
+    {
+        $route = array_filter($this->routes, fn($k) => $k["namespace"] == $namespace);
+        if ($route){
+            return array_values($route)[0];
+        } else {
+            return null;
+        }
+    }
 }
