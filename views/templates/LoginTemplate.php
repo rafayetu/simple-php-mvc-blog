@@ -1,4 +1,4 @@
-<h1>Login</h1>
+<h3 class="h3 mb-3 fw-normal">Please sign in</h3>
 <?php
 
 use app\core\Form;

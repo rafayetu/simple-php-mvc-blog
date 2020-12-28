@@ -40,22 +40,23 @@ class FormField
         $field = $model->{$attribute};
         $labelVisibility = $this->labelVisibility ? "" : 'style="display: none"';
 
-        return sprintf('<div class="mb-3">
-            <label for="%s" class="form-label" %s>%s</label>
+        return sprintf('<div class="form-floating mb-3">
+            
             <input type="%s" name="%s" class="form-control %s"
                    id="%s" value="%s">
+            <label for="%s"  %s>%s</label>
             <div class="invalid-feedback">
                 %s
             </div>
         </div>',
-            $attribute,
-            $labelVisibility,
-            $field->verbose,
             $this->type,
             $attribute,
             $model->hasError($attribute)? 'is-invalid' : "",
             $attribute,
             $field->getValue(),
+            $attribute,
+            $labelVisibility,
+            $field->verbose,
             $model->getFirstError($this->attribute)
         ) ;
     }

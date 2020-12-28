@@ -1,4 +1,4 @@
-<h1>Create an Account</h1>
+<h3 class="h3 mb-3 fw-normal">Create an account</h3>
 <?php
 
 use app\core\Form;
