@@ -9,6 +9,7 @@ use app\core\Controller;
 use app\core\Request;
 use app\models\CommentModel;
 use app\models\PostModel;
+use app\views\HomeView;
 use app\views\LoginView;
 use app\views\PostEditorView;
 use app\views\PostReadView;
@@ -87,6 +88,12 @@ class PostController extends Controller
         $model->getAuthorPosts();
 
         return $this->render(PostsAuthorView::class, ["model" => $model]);
+    }
+
+    public function postAll(Request $request)
+    {
+        $model = new PostModel();
+        return $this->render(HomeView::class, ["model" => $model]);
     }
 
 }

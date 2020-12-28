@@ -34,6 +34,11 @@ abstract class Model
         $this->formValidation();
     }
 
+    public function currentUserID()
+    {
+        return Application::$app->user->id->getValue();
+    }
+
 
     private function validate($key, $value)
     {

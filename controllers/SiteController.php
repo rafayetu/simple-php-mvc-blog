@@ -11,13 +11,6 @@ use app\views;
 
 class SiteController extends Controller
 {
-    public function home()
-    {
-        $params = [
-            "name" => "Simple MVC Blog"
-        ];
-        return $this->render(views\HomeView::class, $params);
-    }
 
 
     public function contact()

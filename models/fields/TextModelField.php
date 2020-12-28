@@ -22,5 +22,19 @@ class TextModelField extends ModelField
         return $this;
     }
 
+    public function htmlContent()
+    {
+        return html_entity_decode($this->getValue());
+    }
+
+    public function htmlText($limit=null)
+    {
+        $text = strip_tags($this->htmlContent());
+        if (!is_null($limit)){
+            $text = substr($text, 0, $limit);
+        }
+        return $text;
+    }
+
 
 }

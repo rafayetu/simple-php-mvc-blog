@@ -97,17 +97,39 @@ class PostModel extends Model
     {
         $post = new PostModel();
         $post->loadData($record);
+        $user = new UserModel();
+        $post->author = $user->setUserFromID($post->author_id->getValue());
         return $post;
     }
     public function getAuthorPosts()
     {
-        $this->loadData(["author_id"=>Application::$app->user->id->getValue()]);
-        $records = $this->db->selectResult(self::DB_TABLE,
-            [$this->author_id], [$this->id, $this->author_id, $this->title, $this->created_at,
-                $this->published_at, $this->status]);
+        return $this->getPosts(true, false);
+    }
+
+    public function getHomePosts()
+    {
+        return $this->getPosts(false, true, self::STATUS_PUBLISHED);
+    }
+    public function getPosts($isAuthorPosts=false, $loadContent=false, $postStatus=null)
+    {
+        $searchQuery = [];
+        $columns = [$this->id, $this->author_id, $this->title, $this->created_at, $this->published_at, $this->status];
+        if ($isAuthorPosts){
+            $this->loadData(["author_id"=>$this->currentUserID()]);
+            array_push($searchQuery, $this->author_id);
+        }
+        if (!is_null($postStatus)){
+            $this->status->setValue($postStatus);
+            array_push($searchQuery, $this->status);
+        }
+        if ($loadContent){
+            array_push($columns, $this->content);
+        }
+        $records = $this->db->selectResult(self::DB_TABLE, $searchQuery, $columns);
         $this->postList = array_map(fn($r) => $this->newPostInstance($r), $records);
         return $this->postList;
     }
+
 
     public function loadComments()
     {

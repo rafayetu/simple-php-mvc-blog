@@ -19,19 +19,19 @@ $form = new Form();
         <hr>
         <?php echo html_entity_decode($model->content) ?>
     </article>
-    <div>
+    <div class="col-8">
         <h2 class="m-4">Comments</h2>
         <div class="container">
             <?php
             $commentModel = new CommentModel();
             foreach ($model->loadComments() as $comment) {?>
-            <div class="p-4 mb-3 bg-light rounded">
+            <div class="p-4 mx-4 mb-3 bg-light rounded">
                 <div class="mb-3">
-                    <h5 class="mb-0">
+                    <h6 class="mb-0">
                         <a class="" style="text-decoration:none" href="/profile/<?php echo $comment->author->id?>">
                             <?php echo $comment->author->getFullName()?>
                         </a>
-                    </h5>
+                    </h6>
                     <small class="">Commented on <?php echo $comment->created_at?></small>
 
                     <?php if ($comment->author->isCurrentUser()){
@@ -48,7 +48,7 @@ $form = new Form();
             <?php } ?>
         </div>
 
-        <div class="container">
+        <div class="container my-4">
             <h4 class="h4 mb-4">Write a comment</h4>
             <?php
             if (Application::$app->user->isUserLoggedIn) {
