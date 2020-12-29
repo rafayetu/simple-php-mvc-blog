@@ -4,7 +4,7 @@
 namespace app\views;
 
 
-class PostModerationView extends PostListView
+class UserModerationView extends PostListView
 {
     public function __construct()
     {
@@ -27,7 +27,8 @@ class PostModerationView extends PostListView
         ob_start(); ?>
         <script>
             let modalID = "#exampleModal";
-            let modalKeys = [["id", 0], ["status", 3]];
+            let modalKeys = [["id", 0], ["status", 3], ["role", 4]];
+
         </script>
         <script src="/js/modal.js"></script>
 

@@ -24,24 +24,24 @@ class PostController extends Controller
         $isPostExist = false;
         $model = new PostModel();
         $post_id = $request->getPath()[1][0] ?? null;
-        if ($post_id){
-            $isPostExist = $model->isPostExist($post_id, $loginRequired=true);
-            if (!$isPostExist){
+        if ($post_id) {
+            $isPostExist = $model->isPostExist($post_id, $loginRequired = true);
+            if (!$isPostExist) {
                 return $this->redirect($request->getPath()[0]);
             };
         }
 
-        if ($request->isPost()){
+        if ($request->isPost()) {
             $body = $request->getBody();
             $body["author_id"] = $this->currentUserID();
             $body["status"] = isset($body["publish"]) ? PostModel::STATUS_PENDING : PostModel::STATUS_UNPUBLISHED;
             $model->loadData($body);
-            if ($post_id && $isPostExist){
+            if ($post_id && $isPostExist) {
                 $saved = $model->updatePost();
             } else {
                 $saved = $model->writePost();
             }
-            if ($saved){
+            if ($saved) {
                 return $this->redirect(PostListView::PATH);
             } else {
                 return $this->redirectSameURI();
@@ -65,17 +65,17 @@ class PostController extends Controller
             return $this->redirectHome();
         }
 
-        if ($request->isPost()){
+        if ($request->isPost()) {
             $body = $request->getBody();
             $body["author_id"] = $this->currentUserID();
             $body["post_id"] = $post_id;
 
-            if (isset($body["comment"]) && $isPostExist){
+            if (isset($body["comment"]) && $isPostExist) {
                 $this->loginRequired();
                 $commentModel = new CommentModel();
                 $commentModel->loadData($body);
                 $commentModel->writeComment();
-            } elseif (isset($body["delete-comment"]) && $isPostExist){
+            } elseif (isset($body["delete-comment"]) && $isPostExist) {
                 $this->loginRequired();
                 $body["id"] = $body["delete-comment"];
                 $commentModel = new CommentModel();
@@ -101,17 +101,12 @@ class PostController extends Controller
     {
         $model = new PostModel();
         if ($request->isPost()) {
-            if (Application::$app->user->isAdminUser()){
-                $body = $request->getBody();
-                $model->loadData($body);
-                $model->updateStatus();
-            }
-
+            $body = $request->getBody();
+            $model->loadData($body);
+            $model->updateStatus();
             return $this->redirectSameURI();
-
         }
-
-            $model->getPosts();
+        $model->getPosts();
         return $this->render(PostModerationView::class, ["model" => $model]);
     }
 
@@ -126,11 +121,11 @@ class PostController extends Controller
     {
         $model = new PostModel();
         $user_id = $request->getPath()[1][0] ?? null;
-        if ($user_id){
+        if ($user_id) {
             $userModel = new UserModel();
-            $userModel->loadData(["id"=>$user_id]);
+            $userModel->loadData(["id" => $user_id]);
             $isUserExist = $userModel->isValidUser($userModel->id);
-            if (!$isUserExist){
+            if (!$isUserExist) {
                 return $this->redirect($request->getPath()[0]);
             } else {
                 $model->loadData(["author_id" => $user_id]);
@@ -141,7 +136,6 @@ class PostController extends Controller
         $currentUser = $user_id ? false : true;
         $model->getPosts(true, true, PostModel::STATUS_PUBLISHED, $currentUser);
 
-
         return $this->render(HomeView::class, ["model" => $model]);
     }
 
@@ -149,9 +143,9 @@ class PostController extends Controller
     {
         $model = new PostModel();
         $category = $request->getPath()[1][0] ?? null;
-        if ($category){
-            $model->loadData(["category"=>$category]);
-            if (!$model->isFormValid){
+        if ($category) {
+            $model->loadData(["category" => $category]);
+            if (!$model->isFormValid) {
                 return $this->redirectHome();
             }
             $model->getPosts(false, true, PostModel::STATUS_PUBLISHED, false, true);

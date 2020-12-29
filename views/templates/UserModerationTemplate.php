@@ -4,7 +4,7 @@ use app\core\Form;
 use app\models\PostModel;
 
 $model = $model ?? null;
-$fields = ["id", "title", "created_at", "status", "category", "author"];
+$fields = ["id", "firstname", "lastname", "status", "role", "created_at"];
 
 ?>
 <table id="postModerationTable" class="table table-striped table-bordered" style="width:100%">
@@ -24,11 +24,11 @@ $fields = ["id", "title", "created_at", "status", "category", "author"];
     </thead>
     <tbody>
     <?php
-    foreach ($model->postList as $post) {
+    foreach ($model->userList as $post) {
         echo "<tr>";
         foreach ($fields as $field) {
             if (property_exists($post, $field)) {
-                if (in_array($field, ["status", "category"])) {
+                if (in_array($field, ["status", "role"])) {
                     echo "<td>{$post->$field->getName()}</td>";
                 } elseif ($field == "author") {
                     echo "<td><a href='/profile/{$post->$field->id->getValue()}'>{$post->$field->getFullName()}</a></td>";
@@ -37,8 +37,7 @@ $fields = ["id", "title", "created_at", "status", "category", "author"];
                 }
             }
         }
-        echo "<td><a class='btn btn-sm btn-outline-primary m-1' onclick='openModal(this)'>Edit</a>
-                  <a class='btn btn-sm btn-outline-success m-1' href='/post/{$post->id}'>Read</a></td>";
+        echo "<td><a class='btn btn-sm btn-outline-primary m-1' onclick='openModal(this)'>Edit</a></td>";
         echo "</tr>";
     }
     ?>
@@ -68,7 +67,14 @@ $fields = ["id", "title", "created_at", "status", "category", "author"];
                             } ?>
                         </select>
                         <label for="status">Status</label>
-
+                    </div>
+                    <div class="form-floating mb-3">
+                        <select class="form-control form-select" id="role" name="role" aria-label="Select Status">
+                            <?php foreach ($model->role->statusList as $k => $v) {
+                                echo "<option value='$k'>$v</option>";
+                            } ?>
+                        </select>
+                        <label for="role">User Role</label>
                     </div>
                 </div>
                 <div class="modal-footer">

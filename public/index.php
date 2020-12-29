@@ -45,6 +45,8 @@ $app->router->setRoute("/post-list", [PostController::class, 'postList'],
 
 $app->router->setRoute("/post-moderation", [PostController::class, 'postModeration'],
     Router::PERMISSION_ADMIN, "Post Moderation", "post-moderation");
+$app->router->setRoute("/user-moderation", [UserController::class, 'userModeration'],
+    Router::PERMISSION_ADMIN, "User Moderation", "user-moderation");
 
 
 $app->run();

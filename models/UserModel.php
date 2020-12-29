@@ -6,6 +6,7 @@ namespace app\models;
 
 use app\core\Application;
 use app\core\Model;
+use app\models\fields\DateTimeModelField;
 use app\models\fields\EmailModelField;
 use app\models\fields\IntegerModelField;
 use app\models\fields\PasswordModelField;
@@ -31,7 +32,8 @@ class UserModel extends Model
     public PasswordModelField $confirmPassword;
     public StatusModelField $status;
     public StatusModelField $role;
-
+    public DateTimeModelField $created_at;
+    public array $userList = [];
 
     public function __construct()
     {
@@ -45,6 +47,7 @@ class UserModel extends Model
         $this->confirmPassword = new PasswordModelField($name = "confirmPassword", $verbose = "Confirm Password");
         $this->status = new StatusModelField($name = 'status', $verbose = "Status");
         $this->role = new StatusModelField($name = 'role', $verbose = "User Role");
+        $this->created_at = new DateTimeModelField($name = 'created_at', $verbose = "Member Since");
 
         $this->firstname->setRequired(true)->setMin(2)->setMax(50);;
         $this->lastname->setRequired(true)->setMin(2)->setMax(50);
@@ -188,5 +191,36 @@ class UserModel extends Model
     public function isAdminUser()
     {
         return $this->role->getValue() == self::ROLE_ADMIN;
+    }
+
+    public function getUserInstance($record)
+    {
+        $user = new UserModel();
+        $user->setProperties($record);
+        return $user;
+    }
+
+    public function getUsers()
+    {
+        $records = $this->db->selectResult(self::DB_TABLE, null,
+            [$this->id, $this->firstname, $this->lastname, $this->status, $this->role, $this->created_at]);
+
+        $this->userList = array_map(fn($r) => $this->getUserInstance($r), $records);
+        return $this->userList;
+    }
+
+    public function updateUser()
+    {
+        $updateFields = [$this->status, $this->role];
+
+        if ($this->isFormValid) {
+            $this->db->updateTable(self::DB_TABLE,
+                [$this->id], $updateFields);
+            $this->session->setMessage("info", "Post Updated",
+                "You have successfully updated user status and role");
+            return true;
+        } else {
+            return false;
+        }
     }
 }

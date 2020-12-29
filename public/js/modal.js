@@ -35,15 +35,17 @@ function selectOption(select, value) {
     }
 }
 
+
 function openModal(elem) {
     let modal = $(modalID);
     modal.find('form')[0].reset();
     let row = elem.parentElement.parentElement.children;
-    let row_info = {
-        id: row[0].innerText,
-        status: row[3].innerText,
-    };
-    fillModalInputFields(modalID, row_info);
+    let rowInfo = {};
+
+    for (let i=0; i<modalKeys.length; i++){
+        rowInfo[modalKeys[i][0]] = row[modalKeys[i][1]].innerText;
+    }
+    fillModalInputFields(modalID, rowInfo);
     modal.modal("show");
 
     //

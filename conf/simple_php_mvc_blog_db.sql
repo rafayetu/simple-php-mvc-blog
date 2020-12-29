@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 29, 2020 at 05:53 AM
+-- Generation Time: Dec 29, 2020 at 07:57 AM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 7.4.13
 
@@ -35,6 +35,23 @@ CREATE TABLE `categories` (
   `category_key` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `category_name` varchar(50) COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `categories`
+--
+
+INSERT INTO `categories` (`id`, `category_key`, `category_name`) VALUES
+(1, 'world', 'World'),
+(2, 'technology', 'Technology'),
+(3, 'culture', 'Culture'),
+(4, 'business', 'Business'),
+(5, 'politics', 'Politics'),
+(6, 'opinion', 'Opinion'),
+(7, 'science', 'Science'),
+(8, 'health', 'Health'),
+(9, 'style', 'Style'),
+(10, 'travel', 'Travel'),
+(11, 'sports', 'Sports');
 
 -- --------------------------------------------------------
 
@@ -156,7 +173,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `comments`

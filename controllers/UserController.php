@@ -7,9 +7,12 @@ namespace app\controllers;
 use app\core\Application;
 use app\core\Controller;
 use app\core\Request;
+use app\models\PostModel;
 use app\models\UserModel;
 use app\views\LoginView;
+use app\views\PostModerationView;
 use app\views\RegistrationView;
+use app\views\UserModerationView;
 
 
 class UserController extends Controller
@@ -55,4 +58,20 @@ class UserController extends Controller
 //        }
         return Application::$app->response->redirect("/");
     }
+
+    public function userModeration(Request $request)
+    {
+        $model = new UserModel();
+        if ($request->isPost()) {
+            if (Application::$app->user->isAdminUser()) {
+                $body = $request->getBody();
+                $model->loadData($body);
+                $model->updateUser();
+            }
+            return $this->redirectSameURI();
+        }
+        $model->getUsers();
+        return $this->render(UserModerationView::class, ["model" => $model]);
+    }
+
 }

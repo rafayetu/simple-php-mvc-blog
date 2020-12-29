@@ -26,7 +26,7 @@ class PostListView extends View
         <link href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap5.min.css" rel="stylesheet">
         <style>
             th, td {
-                max-width: 500px;
+                max-width: 350px;
             }
         </style>
         <?php

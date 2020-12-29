@@ -84,12 +84,10 @@ abstract class Model
 
     protected function setProperties($record)
     {
-        foreach ($record as $key => $value){
-            if (property_exists($this, $key)){
+        foreach ($record as $key => $value) {
+            if (property_exists($this, $key)) {
                 $this->$key->setValue($value);
             }
         }
     }
-
-
 }
