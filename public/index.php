@@ -5,6 +5,7 @@ define("SITE_NAME", "Simple MVC Blog" );
 
 require_once ROOT_DIR . '/vendor/autoload.php';
 
+use app\controllers\CategoryController;
 use app\controllers\PostController;
 use app\controllers\SiteController;
 use app\controllers\UserController;
@@ -47,6 +48,8 @@ $app->router->setRoute("/post-moderation", [PostController::class, 'postModerati
     Router::PERMISSION_ADMIN, "Post Moderation", "post-moderation");
 $app->router->setRoute("/user-moderation", [UserController::class, 'userModeration'],
     Router::PERMISSION_ADMIN, "User Moderation", "user-moderation");
+$app->router->setRoute("/category-moderation", [CategoryController::class, 'categoryModeration'],
+    Router::PERMISSION_ADMIN, "Category Moderation", "category-moderation");
 
 
 $app->run();

@@ -47,9 +47,13 @@ function openModal(elem) {
     }
     fillModalInputFields(modalID, rowInfo);
     modal.modal("show");
+}
 
-    //
-    // $('#left-to-allocate').val(row_info["total_refund"]);
-    // modal.modal('show');
+
+function openModalAdd(elem) {
+    let modal = $(modalID);
+    modal.find('form')[0].reset();
+    modal.modal("show");
+
 
 }
