@@ -24,6 +24,11 @@ class PostListView extends View
         ob_start();?>
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+        <style>
+            th, td {
+                max-width: 500px;
+            }
+        </style>
         <?php
         $this->extra_css = ob_get_clean();
         ob_flush();

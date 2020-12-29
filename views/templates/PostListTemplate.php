@@ -1,6 +1,6 @@
 <?php
 $model = $model ?? null;
-$fields = ["title", "created_at", "status"];
+$fields = ["title", "created_at", "status", "category"];
 ?>
 <table id="postListTable" class="table table-striped table-bordered" style="width:100%">
     <thead>
@@ -19,7 +19,7 @@ $fields = ["title", "created_at", "status"];
         echo "<tr>";
         foreach ($fields as $field) {
             if (property_exists($post, $field)) {
-                if ($field == "status") {
+                if (in_array($field, ["status", "category"])) {
                     echo "<td>{$post->$field->getName()}</td>";
                 } else {
                     echo "<td>{$post->$field}</td>";

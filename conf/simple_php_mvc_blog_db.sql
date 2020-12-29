@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 28, 2020 at 08:46 PM
+-- Generation Time: Dec 29, 2020 at 05:53 AM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 7.4.13
 
@@ -22,6 +22,19 @@ SET time_zone = "+00:00";
 --
 CREATE DATABASE IF NOT EXISTS `simple_php_mvc_blog_db` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 USE `simple_php_mvc_blog_db`;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `categories`
+--
+
+DROP TABLE IF EXISTS `categories`;
+CREATE TABLE `categories` (
+  `id` int(11) NOT NULL,
+  `category_key` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `category_name` varchar(50) COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -51,6 +64,7 @@ CREATE TABLE `posts` (
   `id` int(11) NOT NULL,
   `author_id` int(11) NOT NULL,
   `title` varchar(512) COLLATE utf8_unicode_ci NOT NULL,
+  `category` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `content` text COLLATE utf8_unicode_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `published_at` datetime NOT NULL,
@@ -97,6 +111,13 @@ CREATE TABLE `users` (
 --
 
 --
+-- Indexes for table `categories`
+--
+ALTER TABLE `categories`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `name` (`category_key`);
+
+--
 -- Indexes for table `comments`
 --
 ALTER TABLE `comments`
@@ -109,7 +130,8 @@ ALTER TABLE `comments`
 --
 ALTER TABLE `posts`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `author_id` (`author_id`);
+  ADD KEY `author_id` (`author_id`),
+  ADD KEY `post_category` (`category`);
 
 --
 -- Indexes for table `sessions`
@@ -129,6 +151,12 @@ ALTER TABLE `users`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `categories`
+--
+ALTER TABLE `categories`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `comments`
@@ -169,7 +197,8 @@ ALTER TABLE `comments`
 -- Constraints for table `posts`
 --
 ALTER TABLE `posts`
-  ADD CONSTRAINT `author_id` FOREIGN KEY (`author_id`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `author_id` FOREIGN KEY (`author_id`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `post_category` FOREIGN KEY (`category`) REFERENCES `categories` (`category_key`) ON DELETE SET NULL;
 
 --
 -- Constraints for table `sessions`

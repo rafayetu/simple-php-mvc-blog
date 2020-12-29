@@ -4,7 +4,8 @@ use app\core\Form;
 use app\models\PostModel;
 
 $model = $model ?? null;
-$fields = ["id", "title", "created_at", "status", "author"];
+$fields = ["id", "title", "created_at", "status", "category", "author"];
+
 ?>
 <table id="postModerationTable" class="table table-striped table-bordered" style="width:100%">
     <thead>
@@ -14,7 +15,7 @@ $fields = ["id", "title", "created_at", "status", "author"];
             if ($field == "author") {
                 echo "<th>Author</th>";
             } else {
-                echo "<th>{$model->$field->verbose}</th>";
+                echo "<th >{$model->$field->verbose}</th>";
             }
         }
     }
@@ -27,7 +28,7 @@ $fields = ["id", "title", "created_at", "status", "author"];
         echo "<tr>";
         foreach ($fields as $field) {
             if (property_exists($post, $field)) {
-                if ($field == "status") {
+                if (in_array($field, ["status", "category"])) {
                     echo "<td>{$post->$field->getName()}</td>";
                 } elseif ($field == "author") {
                     echo "<td><a href='/profile/{$post->$field->id->getValue()}'>{$post->$field->getFullName()}</a></td>";
