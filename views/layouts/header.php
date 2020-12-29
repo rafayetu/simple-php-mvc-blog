@@ -52,3 +52,11 @@ $user = Application::$app->user;
 </header>
 
 
+<div class=" py-1 m-2 bg-light rounded">
+    <nav class="nav d-flex justify-content-between">
+        <?php foreach (Application::$app->category->categoryArray as $key => $value) {
+            echo "<a class='p-2 link-secondary link-black' href='/category/$key'>$value</a>";
+        }
+        ?>
+    </nav>
+</div>

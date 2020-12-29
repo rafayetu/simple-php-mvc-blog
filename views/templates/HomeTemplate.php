@@ -8,7 +8,8 @@ $model = $model ?? null;
             <div class="mb-3">
                 <h4> <a href="/post/<?php echo $post->id?>" class="text-dark" style="text-decoration: none;"><?php echo $post->title ;?></a></h4>
                 <small>
-                Posted by <a class="" style="text-decoration:none" href="/profile/<?php echo $post->author->id?>">
+                Category: <a class="" href="/category/<?php echo $post->category?>">
+                        <?php echo $post->category->getName() ?></a> | Posted by <a class="" href="/profile/<?php echo $post->author->id?>">
                         <?php echo $post->author->getFullName()?></a>
                     on <?php echo $post->created_at?></small>
             </div>

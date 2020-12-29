@@ -57,22 +57,7 @@ $view = $view ?? null;
 
 <div class="container-fluid">
     <?php include_once "header.php"; ?>
-    <div class=" py-1 m-2 bg-light rounded">
-        <nav class="nav d-flex justify-content-between">
-            <a class="p-2 link-secondary link-black" href="/contact">World</a>
-            <a class="p-2 link-secondary link-black" href="#">U.S.</a>
-            <a class="p-2 link-secondary link-black" href="#">Technology</a>
-            <a class="p-2 link-secondary link-black" href="#">Design</a>
-            <a class="p-2 link-secondary link-black" href="#">Culture</a>
-            <a class="p-2 link-secondary link-black" href="#">Business</a>
-            <a class="p-2 link-secondary link-black" href="#">Politics</a>
-            <a class="p-2 link-secondary link-black" href="#">Opinion</a>
-            <a class="p-2 link-secondary link-black" href="#">Science</a>
-            <a class="p-2 link-secondary link-black" href="#">Health</a>
-            <a class="p-2 link-secondary link-black" href="#">Style</a>
-            <a class="p-2 link-secondary link-black" href="#">Travel</a>
-        </nav>
-    </div>
+
 
 
 </div>

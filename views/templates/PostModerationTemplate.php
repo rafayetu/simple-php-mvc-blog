@@ -61,7 +61,7 @@ $fields = ["id", "title", "created_at", "status", "author"];
                         <label for="id">ID</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <select class="form-control form-select" id="status" name="status" aria-label="Default select example">
+                        <select class="form-control form-select" id="status" name="status" aria-label="Select Status">
                             <?php foreach ($model->status->statusList as $k => $v) {
                                 echo "<option value='$k'>$v</option>";
                             } ?>

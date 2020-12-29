@@ -23,6 +23,8 @@ $app->router->setRoute("/", [PostController::class, 'postAll'],
     Router::PERMISSION_PUBLIC, "Home", "home");
 $app->router->setRoute("/profile", [PostController::class, 'postProfile'],
     Router::PERMISSION_PUBLIC, "Profile", "profile");
+$app->router->setRoute("/category", [PostController::class, 'postCategory'],
+    Router::PERMISSION_PUBLIC, "Category", "profile");
 
 
 $app->router->setRoute("/login", [UserController::class, 'login'],

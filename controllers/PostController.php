@@ -37,11 +37,17 @@ class PostController extends Controller
             $body["status"] = isset($body["publish"]) ? PostModel::STATUS_PENDING : PostModel::STATUS_UNPUBLISHED;
             $model->loadData($body);
             if ($post_id && $isPostExist){
-                $model->updatePost();
+                $saved = $model->updatePost();
             } else {
-                $model->writePost();
+                $saved = $model->writePost();
             }
-            return $this->redirect(PostListView::PATH);
+            if ($saved){
+                return $this->redirect(PostListView::PATH);
+            } else {
+                return $this->redirectSameURI();
+            }
+
+
         }
         return $this->render(PostEditorView::class, ["model" => $model]);
     }
@@ -91,7 +97,6 @@ class PostController extends Controller
         return $this->render(PostListView::class, ["model" => $model]);
     }
 
-
     public function postModeration(Request $request)
     {
         $model = new PostModel();
@@ -138,6 +143,23 @@ class PostController extends Controller
 
 
         return $this->render(HomeView::class, ["model" => $model]);
+    }
+
+    public function postCategory(Request $request)
+    {
+        $model = new PostModel();
+        $category = $request->getPath()[1][0] ?? null;
+        if ($category){
+            $model->loadData(["category"=>$category]);
+            if (!$model->isFormValid){
+                return $this->redirectHome();
+            }
+            $model->getPosts(false, true, PostModel::STATUS_PUBLISHED, false, true);
+            return $this->render(HomeView::class, ["model" => $model]);
+        } else {
+            return $this->redirectHome();
+        }
+
     }
 
 }

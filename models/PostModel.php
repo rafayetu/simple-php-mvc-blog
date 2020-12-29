@@ -30,6 +30,7 @@ class PostModel extends Model
     public StatusModelField $status;
     public DateTimeModelField $last_updated_at;
     public UserModel $author;
+    public StatusModelField $category;
     public array $postList;
     public array $commentList;
 
@@ -43,6 +44,8 @@ class PostModel extends Model
         $this->created_at = new DateTimeModelField("created_at", "Created At");
         $this->published_at = new DateTimeModelField("published_at", "Published At");
         $this->last_updated_at = new DateTimeModelField("last_updated_at", "Last Updated At");
+        $this->category = new StatusModelField("category", "Category");
+
 
         $this->title->setMin(10)->setMax(512)->setRequired(true);
         $this->content->setMin(10)->setMax(65535)->setRequired(true);
@@ -52,13 +55,16 @@ class PostModel extends Model
             self::STATUS_PUBLISHED => "Published",
             self::STATUS_DELETED => "Deleted",
         ])->setDefault(self::STATUS_UNPUBLISHED);
+        $this->category->setStatusList(Application::$app->category->categoryArray);
+        $this->category->setRequired(true);
+
     }
 
     public function writePost()
     {
         if ($this->isFormValid) {
             $this->db->insertIntoTable(self::DB_TABLE,
-                [$this->author_id, $this->title, $this->content, $this->status]);
+                [$this->author_id, $this->title, $this->content, $this->status, $this->category]);
             $this->session->setMessage("info", "Post Added",
                 "You have successfully added a new post");
             return true;
@@ -78,7 +84,7 @@ class PostModel extends Model
         $this->loadData($data);
 
         $record = $this->db->selectObject(self::DB_TABLE,
-            $searchFields, [$this->id, $this->title, $this->content,
+            $searchFields, [$this->id, $this->title, $this->content, $this->category,
                 $this->author_id, $this->status, $this->created_at, $this->published_at]);
         if ($record) {
             $this->setProperties($record);
@@ -90,8 +96,8 @@ class PostModel extends Model
 
     public function updatePost()
     {
-        $updateFields = [$this->title, $this->content];
-        if (in_array($this->status->getValue(), [self::STATUS_PENDING, self::STATUS_UNPUBLISHED]) ){
+        $updateFields = [$this->title, $this->content, $this->category];
+        if (in_array($this->status->getValue(), [self::STATUS_PENDING, self::STATUS_UNPUBLISHED])) {
             array_push($updateFields, $this->status);
         }
         if ($this->isFormValid) {
@@ -99,7 +105,9 @@ class PostModel extends Model
                 [$this->id], $updateFields);
             $this->session->setMessage("info", "Post Updated",
                 "You have successfully updated your post");
-
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -122,10 +130,10 @@ class PostModel extends Model
         return $this->getPosts(false, true, self::STATUS_PUBLISHED);
     }
 
-    public function getPosts($isAuthorPosts = false, $loadContent = false, $postStatus = null, $currentUser = false)
+    public function getPosts($isAuthorPosts = false, $loadContent = false, $postStatus = null, $currentUser = false, $category = false)
     {
         $searchQuery = [];
-        $columns = [$this->id, $this->author_id, $this->title, $this->created_at, $this->published_at, $this->status];
+        $columns = [$this->id, $this->author_id, $this->title, $this->created_at, $this->published_at, $this->status, $this->category];
         if ($currentUser) {
             $this->loadData(["author_id" => $this->currentUserID()]);
         }
@@ -139,6 +147,10 @@ class PostModel extends Model
         if ($loadContent) {
             array_push($columns, $this->content);
         }
+        if ($category){
+            array_push($searchQuery, $this->category);
+        }
+
         $records = $this->db->selectResult(self::DB_TABLE, $searchQuery, $columns);
         $this->postList = array_map(fn($r) => $this->newPostInstance($r), $records);
         return $this->postList;

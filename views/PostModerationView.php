@@ -8,8 +8,8 @@ class PostModerationView extends PostListView
 {
     public function __construct()
     {
-        parent::__construct();
         $this->datatableID = "postModerationTable";
+        parent::__construct();
     }
 
     protected function loadExtraCSS()

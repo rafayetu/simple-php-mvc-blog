@@ -12,6 +12,7 @@ class CategoryModel extends Model
     public TextModelField $category_key;
     public TextModelField $category_name;
     public array $categoryList;
+    public array $categoryArray = [];
     const DB_TABLE = "categories";
 
     public function __construct()
@@ -27,6 +28,7 @@ class CategoryModel extends Model
     {
         $category = new CategoryModel();
         $category->loadData($record);
+        $this->categoryArray[$category->category_key->getValue()] = $category->category_name->getValue();
         return $category;
     }
 
