@@ -47,10 +47,11 @@ $view = $view ?? null;
     <!-- Custom styles for this template -->
     <link href="https://fonts.googleapis.com/css?family=Playfair&#43;Display:700,900&amp;display=swap" rel="stylesheet">
     <!-- Custom styles for this template -->
+
+    {{extra_css}}
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/blog.css">
 
-    {{extra_css}}
 </head>
 <body>
 <?php include_once "messages.php" ?>
@@ -99,11 +100,11 @@ $view = $view ?? null;
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
+{{extra_js}}
 
 <script src="/js/script.js"></script>
 
 
-{{extra_js}}
 
 </body>
 </html>
