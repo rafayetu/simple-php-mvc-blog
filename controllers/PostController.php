@@ -127,8 +127,6 @@ class PostController extends Controller
             return $this->redirectSameURI();
         $model->page = $page["page"];
 
-
-
         switch ($route["namespace"]){
             case "home":
                 $model->getHomePosts();
@@ -155,7 +153,6 @@ class PostController extends Controller
                 $model->getProfilePosts($parameter);
                 break;
         }
-
 
         if ($model->end)
             $page["pagination"]["Newer"] = 0;
