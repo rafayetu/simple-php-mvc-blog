@@ -4,6 +4,8 @@ use app\core\Application;
 
 $view = $view ?? null;
 $user = Application::$app->user;
+$category_route = Application::$app->router->getRouteFromNamespace("category")
+
 ?>
 <header class="blog-header py-4">
     <div class="row flex-nowrap justify-content-between align-items-center">
@@ -55,7 +57,7 @@ $user = Application::$app->user;
 <div class=" py-1 m-2 bg-light rounded">
     <nav class="nav d-flex justify-content-between">
         <?php foreach (Application::$app->category->categoryArray as $key => $value) {
-            echo "<a class='p-2 link-secondary link-black' href='/category/$key'>$value</a>";
+            echo "<a class='p-2 link-secondary link-black' href='{$category_route['path']}/$key'>$value</a>";
         }
         ?>
     </nav>

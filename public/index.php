@@ -14,9 +14,6 @@ use app\core\Router;
 
 Dotenv\Dotenv::createImmutable(ROOT_DIR. "/conf")->load();
 
-
-
-
 $app = new Application();
 
 

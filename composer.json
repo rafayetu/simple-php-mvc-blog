@@ -1,19 +1,41 @@
 {
-    "name": "workstation/simple-php-mvc-blog",
-    "authors": [
-        {
-            "name": "WorkStation",
-            "email": "rafayet@familytaxrecovery.ca"
-        }
-    ],
-    "autoload": {
-        "psr-4": {
-            "app\\": "./"
-        }
+  "name": "workstation/simple-php-mvc-blog",
+  "authors": [
+    {
+      "name": "Md. Rafayet Ullah (181910)",
+      "email": "rafayet@familytaxrecovery.ca",
+      "homepage": "https://www.facebook.com/rafayet.bd/"
     },
-    "require": {
-      "ext-ctype": "*",
-        "vlucas/phpdotenv": "^5.2",
-      "ext-pdo": "*"
+    {
+      "name": "A.B.M.Shihab Uddin (192126)",
+      "email": "",
+      "homepage": "https://www.facebook.com/md.shihab.716/"
+    },
+    {
+      "name": "Taba Siddiqua (192035)",
+      "email": "",
+      "homepage": "https://www.facebook.com/aami.taba12/"
+    },
+    {
+      "name": "Tayeba Khanam (192136)",
+      "email": "",
+      "homepage": "https://www.facebook.com/tayiba.ocean/"
+    },
+    {
+      "name": "Fahmida Islam (192042)",
+      "email": "",
+      "homepage": "https://www.facebook.com/shuvrota.shupu04/"
     }
+  ],
+  "autoload": {
+    "psr-4": {
+      "app\\": "./"
+    }
+  },
+  "require": {
+    "ext-ctype": "*",
+    "vlucas/phpdotenv": "^5.2",
+    "ext-pdo": "*",
+    "ext-json": "*"
+  }
 }

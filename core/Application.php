@@ -62,4 +62,10 @@ class Application
             ]
         ];
     }
+
+    public function getAuthors()
+    {
+        $json = json_decode(file_get_contents(ROOT_DIR."/composer.json"), true);
+        return $json["authors"];
+    }
 }
