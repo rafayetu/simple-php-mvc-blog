@@ -38,6 +38,6 @@ abstract class Controller
 
     public function redirectSameURI()
     {
-        return Application::$app->response->redirect(Application::$app->request->getFullPath());
+        return Application::$app->response->redirect(Application::$app->request->getOnlyPath());
     }
 }

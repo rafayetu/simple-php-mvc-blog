@@ -123,7 +123,10 @@ class PostController extends Controller
         $route = Application::$app->router->getRoute();
         $parameter = $request->getPath()[1][0] ?? null;
         $page = $this->handlePage($request);
+        if ($page["page"]==0)
+            return $this->redirectSameURI();
         $model->page = $page["page"];
+
 
 
         switch ($route["namespace"]){
