@@ -16,7 +16,7 @@ class PostEditorView extends View
     }
 
 
-    private function loadExtraJS()
+    protected function loadExtraJS()
     {
         ob_start();?>
         <script src="\vendors\tinymce_5.6.2\tinymce\js\tinymce\tinymce.min.js" referrerpolicy="origin"></script>
@@ -35,7 +35,7 @@ class PostEditorView extends View
         ob_flush();
     }
 
-    private function loadExtraCSS()
+    protected function loadExtraCSS()
     {
         ob_start(); ?>
         <style>

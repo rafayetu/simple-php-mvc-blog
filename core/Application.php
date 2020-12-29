@@ -4,6 +4,7 @@
 namespace app\core;
 
 
+use app\models\CategoryModel;
 use app\models\UserModel;
 
 class Application
@@ -16,6 +17,7 @@ class Application
     public Session $session;
     public Database $db;
     public UserModel $user;
+    public CategoryModel $category;
 
 
 
@@ -30,6 +32,8 @@ class Application
         $this->db = new Database($config["db"]);
         $this->user = new UserModel();
         $this->user->verifyUser();
+        $this->category = new CategoryModel();
+        $this->category->selectCategories();
     }
 
     public function run()

@@ -32,8 +32,10 @@ class Database
 
     public function bindValue($statement, $data, $prefix='')
     {
-        foreach ($data as $field) {
-            $statement->bindValue(":$prefix$field->name", $field->getDbValue());
+        if ($data){
+            foreach ($data as $field) {
+                $statement->bindValue(":$prefix$field->name", $field->getDbValue());
+            }
         }
         return $statement;
     }

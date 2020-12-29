@@ -88,7 +88,7 @@ $view = $view ?? null;
 
     <div class="row mt-4">
         <?php if ($view->putTitle){
-            echo "<h1 class='mb-3'>{$view->getTitle()}</h1>";
+            echo "<h1 class='mb-4'>{$view->getTitle()}</h1>";
         }?>
 
         <div class="col-md-9">
