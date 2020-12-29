@@ -7,7 +7,6 @@ require_once ROOT_DIR . '/vendor/autoload.php';
 
 use app\controllers\CategoryController;
 use app\controllers\PostController;
-use app\controllers\SiteController;
 use app\controllers\UserController;
 use app\core\Application;
 use app\core\Router;
@@ -19,9 +18,9 @@ $app = new Application();
 
 $app->router->setRoute("/", [PostController::class, 'postAll'],
     Router::PERMISSION_PUBLIC, "Home", "home");
-$app->router->setRoute("/profile", [PostController::class, 'postProfile'],
+$app->router->setRoute("/profile", [PostController::class, 'postAll'],
     Router::PERMISSION_PUBLIC, "Profile", "profile");
-$app->router->setRoute("/category", [PostController::class, 'postCategory'],
+$app->router->setRoute("/category", [PostController::class, 'postAll'],
     Router::PERMISSION_PUBLIC, "Category", "category");
 
 

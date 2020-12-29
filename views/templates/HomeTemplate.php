@@ -29,6 +29,19 @@ if ($model->postList) {
             </p>
         </div>
     <?php }
+    $page = $page ?? [];
+    echo "<nav class='blog-pagination' aria-label='Pagination'>";
+    foreach ($page as $key => $value){
+        $path = Application::$app->request->getOnlyPath();
+        if ($value<=0){
+            echo "<a class='btn btn-outline-secondary disabled' href='#' tabindex='-1' aria-disabled='true'>$key</a>";
+        } else {
+            echo "<a class='btn btn-outline-primary mx-1' href='$path?page=$value'>$key</a>";
+        }
+    }
+    echo "</nav>";
+    $pre_attr = (isset($page["previous"]) && $page["previous"]<=0 ) ? "aria-disabled='true' disabled='disabled'" : "";
+
 } else {
     echo "<h2 class='mb-4'>No post found</h2>";
 }

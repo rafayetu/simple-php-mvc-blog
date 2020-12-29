@@ -18,6 +18,7 @@ class PostModel extends Model
     const STATUS_PUBLISHED = 2;
     const STATUS_DELETED = 3;
     const DB_TABLE = "posts";
+    const PAGE_POST_LIMIT = 10;
 
     private SessionModel $sessionModel;
     public bool $isUserLoggedIn = false;
@@ -33,6 +34,8 @@ class PostModel extends Model
     public StatusModelField $category;
     public array $postList;
     public array $commentList;
+    public int $page = 1;
+    public bool $end = false;
 
     public function __construct()
     {
@@ -127,12 +130,23 @@ class PostModel extends Model
 
     public function getHomePosts()
     {
-        return $this->getPosts(false, true, self::STATUS_PUBLISHED);
+        return $this->getPosts(false, true, self::STATUS_PUBLISHED, false,false, true);
     }
 
-    public function getPosts($isAuthorPosts = false, $loadContent = false, $postStatus = null, $currentUser = false, $category = false)
+    public function getCategoryPosts()
+    {
+        return $this->getPosts(false, true, PostModel::STATUS_PUBLISHED, false, true, true);
+    }
+
+    public function getProfilePosts($currentUser)
+    {
+        return $this->getPosts(true, true, PostModel::STATUS_PUBLISHED, !$currentUser, false, true);
+    }
+
+    public function getPosts($isAuthorPosts = false, $loadContent = false, $postStatus = null, $currentUser = false, $category = false, $pageLimit=false)
     {
         $searchQuery = [];
+        $extra = "";
         $columns = [$this->id, $this->author_id, $this->title, $this->created_at, $this->published_at, $this->status, $this->category];
         if ($currentUser) {
             $this->loadData(["author_id" => $this->currentUserID()]);
@@ -147,15 +161,23 @@ class PostModel extends Model
         if ($loadContent) {
             array_push($columns, $this->content);
         }
-        if ($category){
+        if ($category) {
             array_push($searchQuery, $this->category);
         }
 
-        $records = $this->db->selectResult(self::DB_TABLE, $searchQuery, $columns);
+        if ($pageLimit){
+            $n1 = ($this->page - 1) * self::PAGE_POST_LIMIT;
+            $n2 = $this->page * self::PAGE_POST_LIMIT;
+            $count = $this->db->selectCount(self::DB_TABLE, $searchQuery);
+            $this->end = $n2 >= intval($count->COUNT);
+            $extra = $pageLimit ? "LIMIT $n1, ".self::PAGE_POST_LIMIT : "";
+        }
+
+
+        $records = $this->db->selectResult(self::DB_TABLE, $searchQuery, $columns, $extra);
         $this->postList = array_map(fn($r) => $this->newPostInstance($r), $records);
         return $this->postList;
     }
-
 
     public function loadComments()
     {

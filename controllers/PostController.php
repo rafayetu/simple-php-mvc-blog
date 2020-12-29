@@ -91,9 +91,7 @@ class PostController extends Controller
     public function postList(Request $request)
     {
         $model = new PostModel();
-
         $model->getAuthorPosts();
-
         return $this->render(PostListView::class, ["model" => $model]);
     }
 
@@ -110,50 +108,58 @@ class PostController extends Controller
         return $this->render(PostModerationView::class, ["model" => $model]);
     }
 
+    public function handlePage(Request $request)
+    {
+        $page = $request->getBody()["page"] ?? "1";
+        $page = intval($page);
+        $previous = $page-1;
+        $next = $page+1;
+        return ["pagination" => ["Older" => $previous, "Newer" => $next], "page" => $page];
+    }
+
     public function postAll(Request $request)
     {
         $model = new PostModel();
-        $model->getHomePosts();
-        return $this->render(HomeView::class, ["model" => $model]);
-    }
+        $route = Application::$app->router->getRoute();
+        $parameter = $request->getPath()[1][0] ?? null;
+        $page = $this->handlePage($request);
+        $model->page = $page["page"];
 
-    public function postProfile(Request $request)
-    {
-        $model = new PostModel();
-        $user_id = $request->getPath()[1][0] ?? null;
-        if ($user_id) {
-            $userModel = new UserModel();
-            $userModel->loadData(["id" => $user_id]);
-            $isUserExist = $userModel->isValidUser($userModel->id);
-            if (!$isUserExist) {
-                return $this->redirect($request->getPath()[0]);
-            } else {
-                $model->loadData(["author_id" => $user_id]);
-            }
-        } else {
-            $this->loginRequired();
-        }
-        $currentUser = $user_id ? false : true;
-        $model->getPosts(true, true, PostModel::STATUS_PUBLISHED, $currentUser);
 
-        return $this->render(HomeView::class, ["model" => $model]);
-    }
+        switch ($route["namespace"]){
+            case "home":
+                $model->getHomePosts();
+                break;
+            case "category":
+                if (!$parameter)
+                    return $this->redirectHome();
+                $model->loadData(["category" => $parameter]);
+                if (!$model->isFormValid)
+                    return $this->redirectHome();
+                $model->getCategoryPosts();
+                break;
+            case "profile":
+                if (!$parameter)
+                    $this->loginRequired();
+                $userModel = new UserModel();
+                $userModel->loadData(["id" => $parameter]);
+                $isUserExist = $userModel->isValidUser($userModel->id);
+                if (!$isUserExist)
+                    return $this->redirectHome();
+                else
+                    $model->loadData(["author_id" => $userModel->id->getValue()]);
 
-    public function postCategory(Request $request)
-    {
-        $model = new PostModel();
-        $category = $request->getPath()[1][0] ?? null;
-        if ($category) {
-            $model->loadData(["category" => $category]);
-            if (!$model->isFormValid) {
-                return $this->redirectHome();
-            }
-            $model->getPosts(false, true, PostModel::STATUS_PUBLISHED, false, true);
-            return $this->render(HomeView::class, ["model" => $model]);
-        } else {
-            return $this->redirectHome();
+                $model->getProfilePosts($parameter);
+                break;
         }
 
-    }
 
+        if ($model->end)
+            $page["pagination"]["Newer"] = 0;
+
+        return $this->render(HomeView::class, [
+            "model" => $model,
+            "page" => $page["pagination"]
+        ]);
+    }
 }

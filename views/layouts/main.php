@@ -66,9 +66,9 @@ $view = $view ?? null;
 <main class="container-fluid">
 
     <?php
-    if (Application::$app->request->getFullPath() == "/") {
-        include_once "featured.php";
-    }
+//    if (Application::$app->request->getFullPath() == "/") {
+//        include_once "featured.php";
+//    }
     ?>
 
 

@@ -30,9 +30,9 @@ class Database
         return $statement;
     }
 
-    public function bindValue($statement, $data, $prefix='')
+    public function bindValue($statement, $data, $prefix = '')
     {
-        if ($data){
+        if ($data) {
             foreach ($data as $field) {
                 $statement->bindValue(":$prefix$field->name", $field->getDbValue());
             }
@@ -52,25 +52,35 @@ class Database
         $statement->execute();
     }
 
-    public function selectFromTableSearchArray(string $tableName, array $searchQuery = null, array $columns = null)
+    public function selectFromTableSearchArray(string $tableName, array $searchQuery = null, array $columns = null, string $extra = "")
     {
-        $columnKeys = $columns ? array_map(fn($obj) => "$obj->name", $columns) : ["*"];
+        if ($columns && $columns[0]=="COUNT"){
+            $columnKeys = ["COUNT(*) COUNT"];
+        } else {
+            $columnKeys = $columns ? array_map(fn($obj) => "$obj->name", $columns) : ["*"];
+        }
         $searchQueryKeys = $searchQuery ? array_map(fn($obj) => "$obj->name=:$obj->name", $searchQuery) : ["1"];
         $statement = $this->prepare("SELECT " . implode(", ", $columnKeys) . " FROM $tableName 
-                                    WHERE " . implode(" AND ", $searchQueryKeys), $searchQuery);
+                                    WHERE " . implode(" AND ", $searchQueryKeys) . " $extra", $searchQuery);
         $statement->execute();
         return $statement;
     }
 
-    public function selectObject(string $tableName, array $searchQuery = null, array $columns = null)
+    public function selectObject(string $tableName, array $searchQuery = null, array $columns = null, string $extra = "")
     {
-        $statement = $this->selectFromTableSearchArray($tableName, $searchQuery, $columns);
+        $statement = $this->selectFromTableSearchArray($tableName, $searchQuery, $columns, $extra);
         return $statement->fetchObject();
     }
 
-    public function selectResult(string $tableName, array $searchQuery = null, array $columns = null)
+    public function selectCount(string $tableName, array $searchQuery = null, string $extra = "")
     {
-        $statement = $this->selectFromTableSearchArray($tableName, $searchQuery, $columns);
+        $statement = $this->selectFromTableSearchArray($tableName, $searchQuery, ["COUNT"], $extra);
+        return $statement->fetchObject();
+    }
+
+    public function selectResult(string $tableName, array $searchQuery = null, array $columns = null, string $extra = "")
+    {
+        $statement = $this->selectFromTableSearchArray($tableName, $searchQuery, $columns, $extra);
         return $statement->fetchAll();
     }
 
