@@ -6,15 +6,20 @@ use app\models\CommentModel;
 
 $model = $model ?? null;
 $form = new Form();
+
+$profile_route = Application::$app->router->getRouteFromNamespace("profile");
+$editor_route = Application::$app->router->getRouteFromNamespace("post-editor");
+$login_route = Application::$app->router->getRouteFromNamespace("login");
+
 ?>
 <div class="p-2">
     <article class="blog-post">
         <h1 class="blog-post-title"><?php echo $model->title ?>
             <?php if ($model->author->isCurrentUser()) { ?>
-                &nbsp;<a class="btn btn-sm btn-outline-primary" href="/post-editor/<?php echo $model->id ?>">Edit</a>
+                &nbsp;<a class="btn btn-sm btn-outline-primary" href="<?php echo "{$editor_route['path']}/{$model->id}" ?>">Edit</a>
             <?php } ?>
         </h1>
-        <p class="blog-post-meta"><?php echo $model->created_at ?> by <a href="/profile/<?php echo $model->author_id ?>"><?php
+        <p class="blog-post-meta"><?php echo $model->created_at ?> by <a href="<?php echo "{$profile_route['path']}/{$model->author_id}" ?>"><?php
                 echo $model->author->getFullName() ?></a></p>
         <hr>
         <?php echo html_entity_decode($model->content) ?>
@@ -28,7 +33,7 @@ $form = new Form();
             <div class="p-4 mx-4 mb-3 bg-light rounded">
                 <div class="mb-3">
                     <h6 class="mb-0">
-                        <a class="" style="text-decoration:none" href="/profile/<?php echo $comment->author->id?>">
+                        <a class="" style="text-decoration:none" href="<?php echo "{$profile_route['path']}/{$comment->author->id}" ?>">
                             <?php echo $comment->author->getFullName()?>
                         </a>
                     </h6>
@@ -58,7 +63,7 @@ $form = new Form();
                 $form::end();
             } else {?>
                 <div class="p-4 mb-3 bg-light rounded">
-                    Please <a class="" href="/login">Login</a> to comment
+                    Please <a class="" href="<?php echo $login_route["path"] ?>">Login</a> to comment
                 </div><?php
             }
             ?>

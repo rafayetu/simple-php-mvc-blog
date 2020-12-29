@@ -1,6 +1,12 @@
 <?php
+
+use app\core\Application;
+
 $model = $model ?? null;
 $fields = ["title", "created_at", "status", "category"];
+$post_route = Application::$app->router->getRouteFromNamespace("post");
+$post_editor_route = Application::$app->router->getRouteFromNamespace("post-editor");
+
 ?>
 <table id="postListTable" class="table table-striped table-bordered" style="width:100%">
     <thead>
@@ -27,8 +33,8 @@ $fields = ["title", "created_at", "status", "category"];
 
             }
         }
-        echo "<td><a class='btn btn-sm btn-outline-primary m-1' href='/post-editor/{$post->id}'>Edit</a>
-                  <a class='btn btn-sm btn-outline-success m-1' href='/post/{$post->id}'>Read</a></td>";
+        echo "<td><a class='btn btn-sm btn-outline-primary m-1' href='{$post_editor_route['path']}/{$post->id}'>Edit</a>
+                  <a class='btn btn-sm btn-outline-success m-1' href='{$post_route['path']}/{$post->id}'>Read</a></td>";
         echo "</tr>";
 
     }

@@ -36,7 +36,7 @@ $app->router->setRoute("/logout", [UserController::class, 'logout'],
 
 $app->router->setRoute("/post", [PostController::class, 'postRead'],
     Router::PERMISSION_PUBLIC, "Post", "post");
-$app->router->setRoute("/post-editor", [PostController::class, 'postEditor'],
+$app->router->setRoute("/post-editors", [PostController::class, 'postEditor'],
     Router::PERMISSION_USER, "Write a Post", "post-editor");
 $app->router->setRoute("/post-list", [PostController::class, 'postList'],
     Router::PERMISSION_USER, "Post List", "post-list");

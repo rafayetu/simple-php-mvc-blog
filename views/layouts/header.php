@@ -4,7 +4,8 @@ use app\core\Application;
 
 $view = $view ?? null;
 $user = Application::$app->user;
-$category_route = Application::$app->router->getRouteFromNamespace("category")
+$category_route = Application::$app->router->getRouteFromNamespace("category");
+$home_route = Application::$app->router->getRouteFromNamespace("home");
 
 ?>
 <header class="blog-header py-4">
@@ -13,7 +14,7 @@ $category_route = Application::$app->router->getRouteFromNamespace("category")
             <a class="link-secondary" href="#">Subscribe</a>
         </div>
         <div class="col-4 text-center">
-            <a class="blog-header-logo text-dark" href="/"><?php echo SITE_NAME; ?></a>
+            <a class="blog-header-logo text-dark" href="<?php echo $home_route['path'] ?>"><?php echo SITE_NAME; ?></a>
         </div>
         <div class="col-4 d-flex justify-content-end align-items-center">
             <a class="link-secondary" href="#" aria-label="Search">

@@ -21,6 +21,11 @@ class UserController extends Controller
     public function login(Request $request)
     {
         $userModel = Application::$app->user;
+        if ($userModel->isUserLoggedIn){
+            Application::$app->session->setMessage("warning", "Already Logged In",
+                "You are already logged in as a user.");
+            return $this->redirectHome();
+        }
 
         if ($request->isPost()) {
 
@@ -37,6 +42,11 @@ class UserController extends Controller
     public function register(Request $request)
     {
         $userModel = Application::$app->user;
+        if ($userModel->isUserLoggedIn){
+            Application::$app->session->setMessage("warning", "Already Logged In",
+                "You are already logged in as a user.");
+            return $this->redirectHome();
+        }
 
         if ($request->isPost()) {
             $userModel->loadData($request->getBody());

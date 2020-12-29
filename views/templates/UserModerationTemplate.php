@@ -1,7 +1,6 @@
 <?php
 
-use app\core\Form;
-use app\models\PostModel;
+use app\core\Application;
 
 $model = $model ?? null;
 $fields = ["id", "firstname", "lastname", "status", "role", "created_at"];
