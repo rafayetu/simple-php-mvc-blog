@@ -4,6 +4,9 @@
 namespace app\core;
 
 
+use DateTime;
+use DateTimeZone;
+
 class Session
 {
     protected const MESSAGE = 'messages';
@@ -21,11 +24,12 @@ class Session
 
     public function setMessage($type, $title, $message)
     {
+        $date = new DateTime("now", new DateTimeZone('Asia/Dhaka') );
         $_SESSION[self::MESSAGE][self::randomString()] = [
             "type" => $type,
             "title" => $title,
             "message" => $message,
-            "time" => date("h:i:s A")
+            "time" => $date->format("h:i:s A")
         ];
     }
 
